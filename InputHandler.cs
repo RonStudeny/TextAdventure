@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace TextAdventure
 {
-    public static class InputHandler
+    public class InputHandler
     {
+        public delegate void ResponseDelegate();
 
         /// <summary>
         /// Generic function for creating basic conversation loops, prints a message and options with which to respond
@@ -35,6 +36,32 @@ namespace TextAdventure
                 loop = res < 0;
             }
         }
+
+        public static void AssesResponse(int res, params ResponseDelegate[] funcs)
+        {
+            funcs[res]();
+        }
+
+        public static ResponseDelegate NewGame = () =>
+        {
+            Console.WriteLine("*New Game Started*");
+        };
+
+        public static ResponseDelegate LoadGame = () =>
+        {
+            Console.WriteLine("*Load game menu*");
+        };
+
+        public static ResponseDelegate Help = () =>
+        {
+            Console.WriteLine("*Help Interaction");
+        };
+
+        public static ResponseDelegate Exit = () =>
+        {
+            Console.WriteLine("*Game exited*");
+        };
+        
 
 
     }
