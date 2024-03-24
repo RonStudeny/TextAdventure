@@ -23,24 +23,26 @@ namespace TextAdventure
 
             while (loop)
             {
+                // Write the initial message and print out the options the player has
                 Console.Clear();
                 Console.WriteLine(message);
                 for (int i = 0; i < options.Length; i++)
                     Console.Write($"{options[i]} | ");
                 Console.WriteLine();
 
+                // Get response from the player, match it to the options and return the index of the chosen option
                 string response = Console.ReadLine().ToLower();
                 for (int i = 0; i < options.Length; i++)
                     if (response == options[i].ToLower()) res = i;
-
+                // end the conversation loop if a valid answer is given
                 loop = res < 0;
             }
         }
 
-        public static void AssesResponse(int res, params ResponseDelegate[] funcs)
-        {
-            funcs[res]();
-        }
+        //  
+
+        public static void AssesResponse(int res, params ResponseDelegate[] funcs) => funcs[res]();
+
 
         public static ResponseDelegate NewGame = () =>
         {
