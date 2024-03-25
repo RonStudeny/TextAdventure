@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TextAdventure.Text;
+
+//#pragma warning disable CS8604 // Possible null reference argument.
 
 namespace TextAdventure
 {
-    public class InputHandler
+    public class PlayerInteractor
     {
         public delegate void ResponseDelegate();
 
@@ -43,28 +46,11 @@ namespace TextAdventure
 
         public static void AssesResponse(int res, params ResponseDelegate[] funcs) => funcs[res]();
 
+        #region MainMenu
 
-        public static ResponseDelegate NewGame = () =>
-        {
-            Console.WriteLine("*New Game Started*");
-        };
-
-        public static ResponseDelegate LoadGame = () =>
-        {
-            Console.WriteLine("*Load game menu*");
-        };
-
-        public static ResponseDelegate Help = () =>
-        {
-            Console.WriteLine("*Help Interaction");
-        };
-
-        public static ResponseDelegate Exit = () =>
-        {
-            Console.WriteLine("*Game exited*");
-        };
         
 
+        #endregion
 
     }
 }
