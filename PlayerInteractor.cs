@@ -11,7 +11,7 @@ namespace TextAdventure
 {
     public class PlayerInteractor
     {
-        public delegate void ResponseDelegate();
+        public delegate void ResponseBehaviour();
 
         /// <summary>
         /// Generic function for creating basic conversation loops, prints a message and options with which to respond
@@ -28,10 +28,10 @@ namespace TextAdventure
             {
                 // Write the initial message and print out the options the player has
                 Console.Clear();
-                Console.WriteLine(message);
+                Console.WriteLine(message + "\n");
                 for (int i = 0; i < options.Length; i++)
-                    Console.Write($"{options[i]} | ");
-                Console.WriteLine();
+                    Console.Write($"| {options[i]} ");
+                Console.Write("|\n");
 
                 // Get response from the player, match it to the options and return the index of the chosen option
                 string response = Console.ReadLine().ToLower();
@@ -42,15 +42,57 @@ namespace TextAdventure
             }
         }
 
-        //  
 
-        public static void AssesResponse(int res, params ResponseDelegate[] funcs) => funcs[res]();
+        /// <summary>
+        /// A follow up function for conversation result, runs the appropriate function based on the result of Conversation() func. and should be called right after it
+        /// </summary>
+        /// <param name="res">out param of the Conversation() func.</param>
+        /// <param name="funcs">an array of function delegates, func runs the appropriate function based on it's index, the order of delegates should match the options given to Conversation() func.</param>
+        public static void AssesResponse(int res, params Action[] funcs) => funcs[res]();
+        //public static void AssesResponse(int res, params ResponseBehaviour[] funcs) => funcs[res]();
 
         #region MainMenu
+        public static void EntryPoint()
+        {
+            MainMenu();
+        }
 
-        
+        public static void MainMenu()
+        {
+            Conversation(TextSource.mmWelocome, TextSource.mmOptions, out int res);
+            AssesResponse(res, StartGame, LoadGame, Help, Exit);
+        }
+
+        public static void StartGame()
+        {
+            Conversation(TextSource.newGameText, TextSource.newGameOptions, out int res);
+            
+        }
+
+        public static void LoadGame()
+        {
+            Console.WriteLine("*Load game menu*");
+        }
+
+        public static void Help()
+        {
+            Conversation(TextSource.helpText, TextSource.helpOptions, out int res);
+            AssesResponse(res, MainMenu);
+        }
+
+        public static void Exit()
+        {
+            Console.WriteLine("*Game exited*");
+        }
 
         #endregion
+
+        public static void GameInit(bool newGame) 
+        {
+            Console.WriteLine("Game Initialised");
+        }
+
+
 
     }
 }

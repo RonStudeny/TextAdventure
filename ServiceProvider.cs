@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ChatAdventure
+namespace TextAdventure
 {
     internal class ServiceProvider
     {
@@ -38,5 +38,6 @@ namespace ChatAdventure
 
             return responseContent;
         }
+
     }
 }

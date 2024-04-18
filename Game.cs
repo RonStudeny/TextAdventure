@@ -9,44 +9,31 @@ namespace TextAdventure
 {
     public class Game
     {
-        public PlayerInteractor interactor { get; set; }
-        public static void Run()
+        public static void Main()
         {
-
-            PlayerInteractor.MainMenu();
+            Player player = new Player();
+            PlayerInteractor.EntryPoint();
+            
         }
-
-        public Game()
-        {
-
-        }
-
-        public static ResponseDelegate MainMenu = () =>
-        {
-            Conversation(TextSource.welcome, TextSource.mainMenuOptions, out int res);
-            AssesResponse(res, NewGame, LoadGame, Help, Exit);
-        };
-
-        public static ResponseDelegate NewGame = () =>
-        {
-            Console.WriteLine("*New Game Started*");
-        };
-
-        public static ResponseDelegate LoadGame = () =>
-        {
-            Console.WriteLine("*Load game menu*");
-        };
-
-        public static ResponseDelegate Help = () =>
-        {
-            Console.WriteLine("*Help Interaction");
-        };
-
-        public static ResponseDelegate Exit = () =>
-        {
-            Console.WriteLine("*Game exited*");
-        };
-
 
     }
+
+    public class Player
+    {
+        public Player()
+        {
+            Health = 100.0f;
+            Items = new List<Item>();
+        }
+        public float Health { get; set; }
+        public List<Item> Items { get; set; }
+
+    }
+    public class Item
+    {
+        public string Name { get; set; }
+    }
+
+
+
 }
