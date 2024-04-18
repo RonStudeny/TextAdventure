@@ -7,12 +7,12 @@ using TextAdventure.Text;
 
 namespace TextAdventure
 {
-    public class Game
+    public static class Game
     {
+        public static Player player;
         public static void Main()
         {
-            Player player = new Player();
-            PlayerInteractor.EntryPoint();
+            PlayerInteractor.MainMenu();
             
         }
 
