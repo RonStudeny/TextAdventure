@@ -17,6 +17,9 @@ namespace TextAdventure.Text
         public static string helpText = "*very useful info*";
         public static string[] helpOptions = { "Back" };
 
+        public static string loopMainText = "You are in a: ";
+        public static string[] loopMainOptions = { "Go", "Search", "Inventory" };
         public static string[] locations = { "Forest", "City", "Whatever" };
+
     }
 }

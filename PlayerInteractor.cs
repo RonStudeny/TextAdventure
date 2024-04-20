@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TextAdventure.DataStructure;
 using TextAdventure.Text;
 
 //#pragma warning disable CS8604 // Possible null reference argument.
@@ -44,65 +45,71 @@ namespace TextAdventure
                 loop = res < 0;
             }
         }
-
-
-        /// <summary>
-        /// A follow up function for conversation result, runs the appropriate function based on the result of Conversation() func.
-        /// </summary>
-        /// <param name="res">out param of the Conversation() func.</param>
-        /// <param name="funcs">an array of function delegates, func runs the appropriate function based on it's index, the order of delegated funcs. should match the options given to Conversation() func.</param>
-        public static void AssesResponse(int res, params Action[] funcs) => funcs[res]();
-        //public static void AssesResponse<T>(int res, T arg, params Action<T>[] funcs) => funcs[res](arg);
-
-        #region MainMenuFunctions
+        public static void AssesResponse(int res, params Action[] funcs) => funcs[res].Invoke();
 
         public static void MainMenu()
         {
             Conversation(TextSource.mmWelocome, TextSource.mmOptions, out int res);
             AssesResponse(res, NewGame, LoadGame, Help, Exit);
+            MainMenu();
+
         }
 
         public static void NewGame()
         {
             Conversation(TextSource.newGameText, TextSource.newGameOptions, out int res);
-            if (res == 0) GameInit(true);
-            else MainMenu();
+            if (res == 0)
+            {
+                Game.player = new Player();
+                // set all the stuff
+            }
+            GameLoop();
         }
 
         public static void LoadGame()
         {
             Console.WriteLine("*Load game menu*");
+            Service.LoadFromFile();
+            GameLoop();
         }
 
         public static void Help()
         {
             Conversation(TextSource.helpText, TextSource.helpOptions, out int res);
-            AssesResponse(res, MainMenu);
         }
 
         public static void Exit() // exits the game
         {
             Console.WriteLine("*Game exited*");
+            Environment.Exit(0);
         }
 
-        #endregion
-
-        public static void GameInit(bool newGame) // Initialise the game, creates fresh player data or fetches them from a file
+        public static void GameLoop()
         {
-            if (newGame)
-            {
-                Game.player = new Player();
-            }
-            else
-            {
-                // load game
-            }
+            Conversation($"{TextSource.loopMainText} {TextSource.locations[0]}", TextSource.loopMainOptions, out int res);
+            AssesResponse(res, ChangeLocation, SearchLocation, ShowInventory);
+            GameLoop();
 
         }
 
-        #region MainGameFunctions
+        public static void ChangeLocation()
+        {
+            Console.WriteLine("*location change dialogue*");
+            Console.ReadLine();
+        }
 
-        #endregion
+        public static void SearchLocation()
+        {
+            Console.WriteLine("*search dialogue*");
+            Console.ReadLine();
+        }
+
+        public static void ShowInventory()
+        {
+            Console.WriteLine("*inventory dialogue*");
+            Console.ReadLine();
+        }
+
 
 
 

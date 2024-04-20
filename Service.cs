@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace TextAdventure
 {
-    internal class ServiceProvider
+    public class Service
     {
         private static readonly HttpClient _httpClient = new HttpClient();
 
@@ -37,6 +37,16 @@ namespace TextAdventure
             string responseContent = await httpResponse.Content.ReadAsStringAsync();
 
             return responseContent;
+        }
+
+        public static void SaveToFile()
+        {
+            throw new NotImplementedException();
+        }
+
+        public static bool LoadFromFile()
+        {
+            throw new NotImplementedException();
         }
 
     }
