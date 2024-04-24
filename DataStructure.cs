@@ -3,9 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TextAdventure.Text;
 
 namespace TextAdventure.DataStructure
 {
+    public static class Templates
+    {
+
+    }
+
     public class Player
     {
         public Player()
@@ -35,9 +41,23 @@ namespace TextAdventure.DataStructure
     public class Location
     {
         public string Name { get; set; }
+        public string Narrative { get; set; }
+        public int Searches { get; set; }
         public Item[] ItemPool { get; set; }
         public Enemy[] EnemyPool { get; set; }
 
+        public static Location GetNewLocation()
+        {
+            Location res = new Location();
+            Random rng = new Random();
+            int index = rng.Next(0, TextSource.locations.Length);
+            res.Name = TextSource.locations[index];
+            res.Narrative = TextSource.locationNarratives[index];
+            res.Searches = rng.Next(0, 4);
+            res.ItemPool = null; // implement
+            res.EnemyPool = null; // implement
 
+            return res;
+        }
     }
 }

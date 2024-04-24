@@ -11,7 +11,7 @@ namespace TextAdventure
     public static class Game
     {
         public static Player player;
-        public static Location location;
+        public static Location location, nextLocation;
         
 
         public static void Main()

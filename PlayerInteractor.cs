@@ -27,24 +27,29 @@ namespace TextAdventure
         {
             bool loop = true;
             res = -1;
-
+;
             while (loop)
             {
-                // Write the initial message and print out the options the player has
                 Console.Clear();
                 Console.WriteLine(message + "\n");
                 for (int i = 0; i < options.Length; i++)
-                    Console.Write($"| {options[i]} ");
-                Console.Write("|\n");
+                    Console.WriteLine($"{i + 1}. {options[i]}");
 
-                // Get response from the player, match it to the options and return the index of the chosen option
-                string response = Console.ReadLine().ToLower();
-                for (int i = 0; i < options.Length; i++)
-                    if (response == options[i].ToLower()) res = i;
-                // end the conversation loop if a valid answer is given
-                loop = res < 0;
+                if (int.TryParse(Console.ReadLine(), out res) && res > 0 && res < options.Length)
+                {
+                    res--;
+                    loop = false;
+                }                   
+                else
+                {
+                    Console.WriteLine("Invalid input, type a corresponding number...");
+                    Console.ReadLine();
+                }
+
             }
         }
+
+
         public static void AssesResponse(int res, params Action[] funcs) => funcs[res].Invoke();
 
         public static void MainMenu()
@@ -52,7 +57,6 @@ namespace TextAdventure
             Conversation(TextSource.mmWelocome, TextSource.mmOptions, out int res);
             AssesResponse(res, NewGame, LoadGame, Help, Exit);
             MainMenu();
-
         }
 
         public static void NewGame()
@@ -61,6 +65,8 @@ namespace TextAdventure
             if (res == 0)
             {
                 Game.player = new Player();
+                Game.location = Location.GetNewLocation();
+                Game.nextLocation = Location.GetNewLocation();
                 // set all the stuff
             }
             GameLoop();
@@ -84,9 +90,10 @@ namespace TextAdventure
             Environment.Exit(0);
         }
 
+        // Main "cycle" in which player chooses actions and the game responds, the loop is done recursivly as to avoid unneceseary conditions
         public static void GameLoop()
         {
-            Conversation($"{TextSource.loopMainText} {TextSource.locations[0]}", TextSource.loopMainOptions, out int res);
+            Conversation($"{TextSource.mainLoopText} {TextSource.locations[0]}", TextSource.mainLoopOptions, out int res);
             AssesResponse(res, ChangeLocation, SearchLocation, ShowInventory);
             GameLoop();
 
@@ -94,9 +101,14 @@ namespace TextAdventure
 
         public static void ChangeLocation()
         {
-            Console.WriteLine("*location change dialogue*");
-            Console.ReadLine();
+            Conversation(Game.nextLocation.Narrative, new string[] { "Go to the: " + Game.nextLocation.Name, "Back" }, out int res);
+            if (res == 0)
+            {
+                Game.location = Game.nextLocation;
+                Game.nextLocation = Location.GetNewLocation();
+            }
         }
+        
 
         public static void SearchLocation()
         {
