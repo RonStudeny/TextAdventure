@@ -35,7 +35,7 @@ namespace TextAdventure
                 for (int i = 0; i < options.Length; i++)
                     Console.WriteLine($"{i + 1}. {options[i]}");
 
-                if (int.TryParse(Console.ReadLine(), out res) && res > 0 && res < options.Length)
+                if (int.TryParse(Console.ReadLine(), out res) && res > 0 && res <= options.Length)
                 {
                     res--;
                     loop = false;
@@ -49,13 +49,23 @@ namespace TextAdventure
             }
         }
 
+        //public static void AssesResponse(int res, params Action[] funcs) => funcs[res].Invoke();
+        public static Dictionary<int, Action> responseDict;
 
-        public static void AssesResponse(int res, params Action[] funcs) => funcs[res].Invoke();
-
+        #region MainMenu
         public static void MainMenu()
         {
+            responseDict = new Dictionary<int, Action>
+            {
+                {0, () => NewGame()},
+                {1, () => LoadGame()},
+                {2, () => Help()},
+                {3, () => Exit()},
+            };
             Conversation(TextSource.mmWelocome, TextSource.mmOptions, out int res);
-            AssesResponse(res, NewGame, LoadGame, Help, Exit);
+            responseDict[res].Invoke();
+
+            //AssesResponse(res, NewGame, LoadGame, Help, Exit);
             MainMenu();
         }
 
@@ -67,9 +77,10 @@ namespace TextAdventure
                 Game.player = new Player();
                 Game.location = Location.GetNewLocation();
                 Game.nextLocation = Location.GetNewLocation();
+                GameLoop();
                 // set all the stuff
             }
-            GameLoop();
+            
         }
 
         public static void LoadGame()
@@ -89,12 +100,21 @@ namespace TextAdventure
             Console.WriteLine("*Game exited*");
             Environment.Exit(0);
         }
+        #endregion
 
         // Main "cycle" in which player chooses actions and the game responds, the loop is done recursivly as to avoid unneceseary conditions
         public static void GameLoop()
         {
-            Conversation($"{TextSource.mainLoopText} {TextSource.locations[0]}", TextSource.mainLoopOptions, out int res);
-            AssesResponse(res, ChangeLocation, SearchLocation, ShowInventory);
+            responseDict = new Dictionary<int, Action>
+            {
+                {0, () => ChangeLocation()},
+                {1, () => SearchLocation(Game.location.SearchChances)},
+                {2, () => ShowInventory()},
+            };
+
+            Conversation($"{TextSource.mainLoopText} {Game.location.Name}", TextSource.mainLoopOptions, out int res);
+            responseDict[res].Invoke();
+            //AssesResponse(res, ChangeLocation, SearchLocation, ShowInventory);
             GameLoop();
 
         }
@@ -110,11 +130,33 @@ namespace TextAdventure
         }
         
 
-        public static void SearchLocation()
+        public static void SearchLocation(int chances)
         {
-            Console.WriteLine("*search dialogue*");
-            Console.ReadLine();
+            Random rng = new Random();
+            if (Game.location.Searches > 0)
+            {
+                if (rng.Next(0, chances + 1) == 1)
+                    Fight();
+                else GrantItem();
+                Console.ReadLine();
+            }
+            else
+            {
+                Console.WriteLine(TextSource.searchNothingLeft);
+                Console.ReadLine();
+            }
         }
+
+        public static void GrantItem()
+        {
+            Console.WriteLine("Found ITEM!");
+        }
+
+        public static void Fight()
+        {
+            Console.WriteLine("FIght!");
+        }
+
 
         public static void ShowInventory()
         {

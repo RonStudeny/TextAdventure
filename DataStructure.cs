@@ -43,8 +43,10 @@ namespace TextAdventure.DataStructure
         public string Name { get; set; }
         public string Narrative { get; set; }
         public int Searches { get; set; }
+        public int SearchChances { get; set; }
         public Item[] ItemPool { get; set; }
         public Enemy[] EnemyPool { get; set; }
+
 
         public static Location GetNewLocation()
         {
@@ -54,6 +56,7 @@ namespace TextAdventure.DataStructure
             res.Name = TextSource.locations[index];
             res.Narrative = TextSource.locationNarratives[index];
             res.Searches = rng.Next(0, 4);
+            res.SearchChances = rng.Next(2, 8);
             res.ItemPool = null; // implement
             res.EnemyPool = null; // implement
 
