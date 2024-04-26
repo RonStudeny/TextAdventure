@@ -8,17 +8,21 @@ using TextAdventure.Text;
 
 namespace TextAdventure
 {
+    public class Program
+    {
+        public static void Main()
+        {
+            PlayerInteractor.MainMenu();
+
+        }
+    }
     public static class Game
     {
         public static Player player;
         public static Location location, nextLocation;
         
 
-        public static void Main()
-        {
-            PlayerInteractor.MainMenu();
-            
-        }
+       
 
     }
 

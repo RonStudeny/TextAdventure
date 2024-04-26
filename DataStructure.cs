@@ -55,7 +55,7 @@ namespace TextAdventure.DataStructure
             int index = rng.Next(0, TextSource.locations.Length);
             res.Name = TextSource.locations[index];
             res.Narrative = TextSource.locationNarratives[index];
-            res.Searches = rng.Next(0, 4);
+            res.Searches = rng.Next(1, 5);
             res.SearchChances = rng.Next(2, 8);
             res.ItemPool = null; // implement
             res.EnemyPool = null; // implement

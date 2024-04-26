@@ -28,6 +28,9 @@ namespace TextAdventure.Text
         };
 
         public static string searchNothingLeft = "There's nothing left to search in this location...";
+        public static string itemFoundText = "You've found a";
+        public static string itemDiscardedText = "You've discarded a";
+        public static string[] itemFoundOptions = { "Keep", "Discard" };
 
         public static string changeLocationText = "Go to the: ";
 

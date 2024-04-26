@@ -45,7 +45,6 @@ namespace TextAdventure
                     Console.WriteLine("Invalid input, type a corresponding number...");
                     Console.ReadLine();
                 }
-
             }
         }
 
@@ -135,6 +134,7 @@ namespace TextAdventure
             Random rng = new Random();
             if (Game.location.Searches > 0)
             {
+                Game.location.Searches--;
                 if (rng.Next(0, chances + 1) == 1)
                     Fight();
                 else GrantItem();
@@ -149,7 +149,17 @@ namespace TextAdventure
 
         public static void GrantItem()
         {
+            Random rng = new Random();
             Console.WriteLine("Found ITEM!");
+            /* // IMPLEMENT ITEMS, THIS WORKS...
+            Item foundItem = Game.location.ItemPool[rng.Next(0, Game.location.ItemPool.Length)];
+
+            Conversation(TextSource.itemFoundText + " " + foundItem.Name, TextSource.itemFoundOptions, out int res);
+            if (res == 0)
+                Game.player.Items.Add(foundItem);
+            else Console.WriteLine(TextSource.itemDiscardedText + " " + foundItem.Name);
+            Console.ReadLine();
+            */
         }
 
         public static void Fight()
