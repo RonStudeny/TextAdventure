@@ -10,6 +10,88 @@ namespace TextAdventure.DataStructure
     public static class Templates
     {
 
+        #region Items
+        public static Consumable Mushroom = new Consumable()
+        {
+            Name = "Mushroom",
+            Description = "A mushroom you found in the forest, should have a positive impact on your health... surely",
+            HealthRestore = 15,
+            Uses = 1
+        };
+
+        public static CraftItem Stick = new CraftItem()
+        {
+            Name = "Stick",
+            Description = "It's a wooden stick, suitable for making primitve weaponary like bows, spears and arrows",
+        };
+
+        public static Weapon Stone = new Weapon()
+        {
+            Name = "Stone",
+            Description = "A rock you've found on the ground, suitable for... like bashing your enemies' skull in",
+            Damage = 5,
+            Uses = 10
+        };
+        #endregion
+
+        #region Enemies
+        public static Enemy Rat = new Enemy()
+        {
+            Name = "Infected rat",
+            Health = 20,
+            Damage = 5
+        };
+
+        public static Enemy Bear = new Enemy()
+        {
+            Name = "Wild bear",
+            Health = 120,
+            Damage = 25
+        };
+
+        public static Enemy Gnome = new Enemy()
+        {
+            Name = "Forest gnome",
+            Health = 25,
+            Damage = 1
+        };
+
+        #endregion
+
+        #region Locations
+        public static Location Forest = new Location()
+        {
+            Name = "Forest",
+            Narrative = TextSource.locationNarratives[0],
+            Searches = 3,
+            SearchChances = 5,
+            ItemPool = new Item[]{ Mushroom, Stick, Stone },
+            EnemyPool = new Enemy[] { Gnome, Bear, Rat}
+        };
+
+        public static Location City = new Location()
+        {
+            Name = "Abandoned city",
+            Narrative = TextSource.locationNarratives[1],
+            Searches = 6,
+            SearchChances = 8,
+            ItemPool = new Item[] { Mushroom, Stick, Stone },
+            EnemyPool = new Enemy[] { Gnome, Bear, Rat }
+        };
+
+        public static Location Base = new Location()
+        {
+            Name = "Military base",
+            Narrative = TextSource.locationNarratives[2],
+            Searches = 5,
+            SearchChances = 4,
+            ItemPool = new Item[] { Mushroom, Stick, Stone },
+            EnemyPool = new Enemy[] { Gnome, Bear, Rat }
+        };
+
+        #endregion
+
+        public static List<Location> locations = new List<Location> { Forest, City, Base };
     }
 
     public class Player
@@ -25,12 +107,42 @@ namespace TextAdventure.DataStructure
     }
     public class Item
     {
-        public enum ItemTypes { Weapon, Consumable };
-        public ItemTypes ItemType { get; set; }
         public string Name { get; set; }
+        public string Description { get; set; }
+       
+    }
+
+    public class Weapon : Item
+    {
+        public int Damage { get; set; }
         public int Uses { get; set; }
 
+        public override string ToString()
+        {
+            return $"{Name} - {Damage} DMG - {Uses} uses left";
+        }
     }
+
+    public class Consumable : Item
+    {
+        public int HealthRestore { get; set; }
+        public int Uses { get; set; }
+
+        public override string ToString()
+        {
+            return $"{Name} - restores {HealthRestore} HP - {Uses} uses left";
+        }
+
+    }
+
+    public class CraftItem : Item
+    {
+        public override string ToString()
+        {
+            return $"{Name}";
+        }
+    }
+
     public class Enemy
     {
         public string Name { get; set; }    
@@ -40,6 +152,7 @@ namespace TextAdventure.DataStructure
 
     public class Location
     {
+
         public string Name { get; set; }
         public string Narrative { get; set; }
         public int Searches { get; set; }
@@ -50,16 +163,10 @@ namespace TextAdventure.DataStructure
 
         public static Location GetNewLocation()
         {
+            //throw new Exception("This function is obsolete, please use Templates class for location, enemy and item instances");
             Location res = new Location();
             Random rng = new Random();
-            int index = rng.Next(0, TextSource.locations.Length);
-            res.Name = TextSource.locations[index];
-            res.Narrative = TextSource.locationNarratives[index];
-            res.Searches = rng.Next(1, 5);
-            res.SearchChances = rng.Next(2, 8);
-            res.ItemPool = null; // implement
-            res.EnemyPool = null; // implement
-
+            res =  Templates.locations[rng.Next(0, Templates.locations.Count)];
             return res;
         }
     }

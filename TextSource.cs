@@ -32,6 +32,12 @@ namespace TextAdventure.Text
         public static string itemDiscardedText = "You've discarded a";
         public static string[] itemFoundOptions = { "Keep", "Discard" };
 
+        public static string enemyEncounterText = "You've encountred a";
+        public static string[] enemyEncounterOptions = { "Fight ", "Item", "Run" };
+
+        public static string enemyFightText = "Choose weapon to fight with";
+        public static string chooseConsumableText = "Choose wich item to use";
+
         public static string changeLocationText = "Go to the: ";
 
     }

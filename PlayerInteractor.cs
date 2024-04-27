@@ -137,8 +137,7 @@ namespace TextAdventure
                 Game.location.Searches--;
                 if (rng.Next(0, chances + 1) == 1)
                     Fight();
-                else GrantItem();
-                Console.ReadLine();
+                else GrantItem();       
             }
             else
             {
@@ -150,21 +149,52 @@ namespace TextAdventure
         public static void GrantItem()
         {
             Random rng = new Random();
-            Console.WriteLine("Found ITEM!");
-            /* // IMPLEMENT ITEMS, THIS WORKS...
+            //Console.WriteLine("Found ITEM!");
+            
             Item foundItem = Game.location.ItemPool[rng.Next(0, Game.location.ItemPool.Length)];
 
             Conversation(TextSource.itemFoundText + " " + foundItem.Name, TextSource.itemFoundOptions, out int res);
             if (res == 0)
                 Game.player.Items.Add(foundItem);
             else Console.WriteLine(TextSource.itemDiscardedText + " " + foundItem.Name);
-            Console.ReadLine();
-            */
+            
         }
 
         public static void Fight()
         {
-            Console.WriteLine("FIght!");
+            Random rng = new Random();
+            Enemy enemy = Game.location.EnemyPool[rng.Next(0, Game.location.EnemyPool.Length)]; // Choose the enemy
+            bool escape = false;
+            int res;
+            do
+            {
+                Conversation($"{TextSource.enemyEncounterText} {enemy.Name} - {enemy.Health} HP", TextSource.enemyEncounterOptions, out res); // choose action
+                switch (res)
+                {
+                    case 0: // ATTACK
+                        List<Weapon> weapons = GetItemsOfType<Weapon>(Game.player.Items);
+                        string[] weaponsNames = GetNames(weapons);
+
+                        Conversation(TextSource.enemyFightText, weaponsNames, out res); // Choose weapon
+                        enemy.Health -= weapons[res].Damage;
+                        weapons[res].Uses--;
+
+                        Console.WriteLine($"You've attacked the {enemy.Name} with {weapons[res].Name} for {weapons[res].Damage} HP");
+                        if (weapons[res].Uses == 0) weapons.RemoveAt(res);
+                        if (enemy.Health > 0) Console.WriteLine($"{enemy} health is now {enemy.Health}");
+                        else Console.WriteLine($"You've defeated the {enemy}");
+
+                        break;
+                    case 1:
+                        List<Consumable> consumables = GetItemsOfType<Consumable>(Game.player.Items);
+                        string[] consumableNames = GetNames(consumables);
+                        Conversation(TextSource.chooseConsumableText, consumableNames, out res);
+                        break;
+
+                }
+
+            } while (escape || enemy.Health > 0);
+
         }
 
 
@@ -174,6 +204,24 @@ namespace TextAdventure
             Console.ReadLine();
         }
 
+        public static List<itemType> GetItemsOfType<itemType>(List<Item> items) where itemType : Item
+        {
+            List<itemType> pickedItems = new List<itemType>();
+            foreach (Item item in items)
+            {
+                if (item is itemType)
+                    pickedItems.Add((itemType)item);          
+            }
+            return pickedItems;
+        }
+
+        public static string[] GetNames<itemType>(List<itemType> items) where itemType : Item
+        {
+            string[] res = new string[items.Count];
+            for (int i = 0; i < items.Count; i++)
+                res[i] = items[i].ToString();
+            return res;
+        }
 
 
 
