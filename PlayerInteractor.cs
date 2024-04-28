@@ -156,7 +156,12 @@ namespace TextAdventure
             Conversation(TextSource.itemFoundText + " " + foundItem.Name, TextSource.itemFoundOptions, out int res);
             if (res == 0)
                 Game.player.Items.Add(foundItem);
-            else Console.WriteLine(TextSource.itemDiscardedText + " " + foundItem.Name);
+            else
+            {
+                Console.WriteLine(TextSource.itemDiscardedText + " " + foundItem.Name);
+                Console.ReadLine();
+            }
+
             
         }
 
@@ -168,32 +173,77 @@ namespace TextAdventure
             int res;
             do
             {
-                Conversation($"{TextSource.enemyEncounterText} {enemy.Name} - {enemy.Health} HP", TextSource.enemyEncounterOptions, out res); // choose action
-                switch (res)
+                bool playerTurn = true;
+                do
                 {
-                    case 0: // ATTACK
-                        List<Weapon> weapons = GetItemsOfType<Weapon>(Game.player.Items);
-                        string[] weaponsNames = GetNames(weapons);
+                    // choose action
+                    Conversation($"{TextSource.enemyEncounterText} {enemy.Name} - {enemy.Health} HP", TextSource.enemyEncounterOptions, out res); 
+                    switch (res)
+                    {
+                        case 0: // ATTACK
+                            List<Weapon> weapons = GetItemsOfType<Weapon>(Game.player.Items);
+                            string[] weaponsNames = GetNames(weapons);
 
-                        Conversation(TextSource.enemyFightText, weaponsNames, out res); // Choose weapon
-                        enemy.Health -= weapons[res].Damage;
-                        weapons[res].Uses--;
+                            Conversation(TextSource.enemyFightText, weaponsNames, out res); // Choose weapon
+                            enemy.Health -= weapons[res].Damage;
+                            weapons[res].Uses--;
 
-                        Console.WriteLine($"You've attacked the {enemy.Name} with {weapons[res].Name} for {weapons[res].Damage} HP");
-                        if (weapons[res].Uses == 0) weapons.RemoveAt(res);
-                        if (enemy.Health > 0) Console.WriteLine($"{enemy} health is now {enemy.Health}");
-                        else Console.WriteLine($"You've defeated the {enemy}");
-
-                        break;
-                    case 1:
-                        List<Consumable> consumables = GetItemsOfType<Consumable>(Game.player.Items);
-                        string[] consumableNames = GetNames(consumables);
-                        Conversation(TextSource.chooseConsumableText, consumableNames, out res);
-                        break;
-
+                            Console.WriteLine($"You've attacked the {enemy.Name} with {weapons[res].Name} for {weapons[res].Damage} HP");
+                            if (weapons[res].Uses == 0) Game.player.Items.Remove(weapons[res]);
+                            if (enemy.Health > 0) Console.WriteLine($"{enemy} health is now {enemy.Health}");
+                            else Console.WriteLine($"You've defeated the {enemy}");
+                            playerTurn = false;
+                            Console.ReadLine();
+                            break;
+                        case 1: // USE CONSUMABLE
+                            if (Game.player.Health < 100)
+                            {
+                                List<Consumable> consumables = GetItemsOfType<Consumable>(Game.player.Items);                                
+                                string[] consumableNames = GetNames(consumables);
+                                Conversation(TextSource.chooseConsumableText, consumableNames, out res);
+                                consumables[res].Uses--;
+                                Game.player.Health = Game.player.Health + consumables[res].HealthRestore > 100 ? 100 : Game.player.Health + consumables[res].HealthRestore;
+                                Console.WriteLine($"You've healed yourself for {consumables[res].HealthRestore} health");
+                                Console.WriteLine($"Your current health is {Game.player.Health} HP");
+                                if (consumables[res].Uses == 0) Game.player.Items.Remove(consumables[res]);
+                            }
+                            else Console.WriteLine(TextSource.consumableHealthFull);
+                            Console.ReadLine();
+                            break;
+                        case 2: // RUN
+                            if (rng.Next(0, 5) == 1)
+                            {
+                                escape = true;
+                                playerTurn = false;
+                                Console.WriteLine(TextSource.runSuccessfulText);
+                                Console.ReadLine();
+                            }
+                            else
+                            {
+                                Console.WriteLine(TextSource.runUnsuccessfulText);
+                                playerTurn = false;
+                                Console.ReadLine();
+                            }
+                            break;
+                    }
+                } while (playerTurn);
+                if (escape == false && enemy.Health > 0)
+                {
+                    Console.WriteLine($"{enemy.Name} attacked you for {enemy.Damage}HP!");
+                    if (Game.player.Health - enemy.Damage > 0)
+                    {
+                        Game.player.Health -= enemy.Damage;
+                        Console.WriteLine($"You're now at {Game.player.Health}HP");
+                    }
+                        
+                    else
+                    {
+                        Game.player.Health = 0;
+                        GameOver();
+                    }
+                    Console.ReadLine();
                 }
-
-            } while (escape || enemy.Health > 0);
+            } while (!escape || enemy.Health > 0);
 
         }
 
@@ -202,6 +252,11 @@ namespace TextAdventure
         {
             Console.WriteLine("*inventory dialogue*");
             Console.ReadLine();
+        }
+
+        public static void GameOver()
+        {
+
         }
 
         public static List<itemType> GetItemsOfType<itemType>(List<Item> items) where itemType : Item

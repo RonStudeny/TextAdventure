@@ -98,10 +98,10 @@ namespace TextAdventure.DataStructure
     {
         public Player()
         {
-            Health = 100.0f;
+            Health = 100;
             Items = new List<Item>();
         }
-        public float Health { get; set; }
+        public int Health { get; set; }
         public List<Item> Items { get; set; }
 
     }
@@ -119,7 +119,7 @@ namespace TextAdventure.DataStructure
 
         public override string ToString()
         {
-            return $"{Name} - {Damage} DMG - {Uses} uses left";
+            return $"{Name} - {Damage}DMG - {Uses} uses left";
         }
     }
 
@@ -130,7 +130,7 @@ namespace TextAdventure.DataStructure
 
         public override string ToString()
         {
-            return $"{Name} - restores {HealthRestore} HP - {Uses} uses left";
+            return $"{Name} - restores {HealthRestore}HP - {Uses} uses left";
         }
 
     }
@@ -147,7 +147,7 @@ namespace TextAdventure.DataStructure
     {
         public string Name { get; set; }    
         public float Health { get; set; }
-        public float Damage { get; set; }
+        public int Damage { get; set; }
     }
 
     public class Location

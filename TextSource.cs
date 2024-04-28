@@ -27,6 +27,9 @@ namespace TextAdventure.Text
             "You've stumbled upon a military base"
         };
 
+        public static string changeLocationText = "Go to the: ";
+
+
         public static string searchNothingLeft = "There's nothing left to search in this location...";
         public static string itemFoundText = "You've found a";
         public static string itemDiscardedText = "You've discarded a";
@@ -36,9 +39,13 @@ namespace TextAdventure.Text
         public static string[] enemyEncounterOptions = { "Fight ", "Item", "Run" };
 
         public static string enemyFightText = "Choose weapon to fight with";
+
+        public static string consumableHealthFull = "Your health is already full";
         public static string chooseConsumableText = "Choose wich item to use";
 
-        public static string changeLocationText = "Go to the: ";
+        public static string runSuccessfulText = "You've decided that fighting isn't an option and ran away";
+        public static string runUnsuccessfulText = "You tried to run away but you triped and fell and the enemy has caught up";
+
 
     }
 }
