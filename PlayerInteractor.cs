@@ -151,7 +151,7 @@ namespace TextAdventure
             Random rng = new Random();
             //Console.WriteLine("Found ITEM!");
             
-            Item foundItem = Game.location.ItemPool[rng.Next(0, Game.location.ItemPool.Length)];
+            Item foundItem = new Item(Game.location.ItemPool[rng.Next(0, Game.location.ItemPool.Length)]);
 
             Conversation(TextSource.itemFoundText + " " + foundItem.Name, TextSource.itemFoundOptions, out int res);
             if (res == 0)
@@ -168,7 +168,7 @@ namespace TextAdventure
         public static void Fight()
         {
             Random rng = new Random();
-            Enemy enemy = Game.location.EnemyPool[rng.Next(0, Game.location.EnemyPool.Length)]; // Choose the enemy
+            Enemy enemy = new Enemy (Game.location.EnemyPool[rng.Next(0, Game.location.EnemyPool.Length)]); // Choose the enemy
             bool escape = false;
             int res;
             do
@@ -243,7 +243,7 @@ namespace TextAdventure
                     }
                     Console.ReadLine();
                 }
-            } while (!escape || enemy.Health > 0);
+            } while (!escape && enemy.Health > 0);
 
         }
 
@@ -256,7 +256,9 @@ namespace TextAdventure
 
         public static void GameOver()
         {
-
+            Console.WriteLine("Bruh you died...");
+            Console.ReadLine();
+            Exit();
         }
 
         public static List<itemType> GetItemsOfType<itemType>(List<Item> items) where itemType : Item

@@ -91,11 +91,12 @@ namespace TextAdventure.DataStructure
 
         #endregion
 
-        public static List<Location> locations = new List<Location> { Forest, City, Base };
+        public static Location[] locations = { Forest, City, Base };
     }
 
     public class Player
     {
+
         public Player()
         {
             Health = 100;
@@ -107,6 +108,12 @@ namespace TextAdventure.DataStructure
     }
     public class Item
     {
+        public Item() { }
+        public Item(Item clone)
+        {
+            this.Name = clone.Name;
+            this.Description = clone.Description;
+        }
         public string Name { get; set; }
         public string Description { get; set; }
        
@@ -114,6 +121,12 @@ namespace TextAdventure.DataStructure
 
     public class Weapon : Item
     {
+        public Weapon() { }
+        public Weapon(Weapon clone) :base(clone)
+        {
+            this.Damage = clone.Damage;
+            this.Uses = clone.Uses;
+        }
         public int Damage { get; set; }
         public int Uses { get; set; }
 
@@ -125,6 +138,12 @@ namespace TextAdventure.DataStructure
 
     public class Consumable : Item
     {
+        public Consumable() { }
+        public Consumable(Consumable clone) : base(clone)
+        {
+            this.HealthRestore = clone.HealthRestore;
+            this.Uses = clone.Uses;
+        }
         public int HealthRestore { get; set; }
         public int Uses { get; set; }
 
@@ -137,6 +156,8 @@ namespace TextAdventure.DataStructure
 
     public class CraftItem : Item
     {
+        public CraftItem() { }
+        public CraftItem(CraftItem clone) : base(clone) { }
         public override string ToString()
         {
             return $"{Name}";
@@ -145,6 +166,13 @@ namespace TextAdventure.DataStructure
 
     public class Enemy
     {
+        public Enemy() { }
+        public Enemy(Enemy clone)
+        {
+            this.Name = clone.Name;
+            this.Health = clone.Health;
+            this.Damage = clone.Damage;
+        }
         public string Name { get; set; }    
         public float Health { get; set; }
         public int Damage { get; set; }
@@ -152,7 +180,16 @@ namespace TextAdventure.DataStructure
 
     public class Location
     {
-
+        public Location() { }
+        public Location(Location clone)
+        {
+            this.Name = clone.Name;
+            this.Narrative = clone.Narrative;
+            this.Searches = clone.Searches;
+            this.SearchChances = clone.SearchChances;
+            this.ItemPool = clone.ItemPool;
+            this.EnemyPool = clone.EnemyPool;
+        }
         public string Name { get; set; }
         public string Narrative { get; set; }
         public int Searches { get; set; }
@@ -164,10 +201,9 @@ namespace TextAdventure.DataStructure
         public static Location GetNewLocation()
         {
             //throw new Exception("This function is obsolete, please use Templates class for location, enemy and item instances");
-            Location res = new Location();
             Random rng = new Random();
-            res =  Templates.locations[rng.Next(0, Templates.locations.Count)];
-            return res;
+            return new Location(Templates.locations[rng.Next(0, Templates.locations.Length)]);
+            
         }
     }
 }
