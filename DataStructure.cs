@@ -122,8 +122,10 @@ namespace TextAdventure.DataStructure
     public class Weapon : Item
     {
         public Weapon() { }
-        public Weapon(Weapon clone) :base(clone)
+        public Weapon(Weapon clone)
         {
+            this.Name = clone.Name;
+            this.Description= clone.Description;
             this.Damage = clone.Damage;
             this.Uses = clone.Uses;
         }
@@ -139,8 +141,10 @@ namespace TextAdventure.DataStructure
     public class Consumable : Item
     {
         public Consumable() { }
-        public Consumable(Consumable clone) : base(clone)
+        public Consumable(Consumable clone)
         {
+            this.Name = clone.Name;
+            this.Description = clone.Description;
             this.HealthRestore = clone.HealthRestore;
             this.Uses = clone.Uses;
         }

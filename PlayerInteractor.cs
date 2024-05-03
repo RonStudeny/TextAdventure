@@ -150,8 +150,22 @@ namespace TextAdventure
         {
             Random rng = new Random();
             //Console.WriteLine("Found ITEM!");
+            // Type type = .GetType();
+            int itemNum = rng.Next(0, Game.location.ItemPool.Length);
+            Item foundItem = Game.location.ItemPool[itemNum];
+            switch (foundItem)
+            {
+                case Weapon:
+                    foundItem = new Weapon((Weapon)Game.location.ItemPool[itemNum]);
+                    break;
+                case Consumable:
+                    foundItem = new Consumable((Consumable)Game.location.ItemPool[itemNum]);
+                    break;
+                case CraftItem:
+                    foundItem = new CraftItem((CraftItem)Game.location.ItemPool[itemNum]);
+                    break;
+            }
             
-            Item foundItem = new Item(Game.location.ItemPool[rng.Next(0, Game.location.ItemPool.Length)]);
 
             Conversation(TextSource.itemFoundText + " " + foundItem.Name, TextSource.itemFoundOptions, out int res);
             if (res == 0)
@@ -190,8 +204,8 @@ namespace TextAdventure
 
                             Console.WriteLine($"You've attacked the {enemy.Name} with {weapons[res].Name} for {weapons[res].Damage} HP");
                             if (weapons[res].Uses == 0) Game.player.Items.Remove(weapons[res]);
-                            if (enemy.Health > 0) Console.WriteLine($"{enemy} health is now {enemy.Health}");
-                            else Console.WriteLine($"You've defeated the {enemy}");
+                            if (enemy.Health > 0) Console.WriteLine($"{enemy.Name} health is now {enemy.Health}");
+                            else Console.WriteLine($"You've defeated the {enemy.Name}");
                             playerTurn = false;
                             Console.ReadLine();
                             break;
@@ -264,10 +278,10 @@ namespace TextAdventure
         public static List<itemType> GetItemsOfType<itemType>(List<Item> items) where itemType : Item
         {
             List<itemType> pickedItems = new List<itemType>();
-            foreach (Item item in items)
+            foreach (var item in items)
             {
-                if (item is itemType)
-                    pickedItems.Add((itemType)item);          
+                if (item is itemType itemOfType)
+                    pickedItems.Add(itemOfType);          
             }
             return pickedItems;
         }
