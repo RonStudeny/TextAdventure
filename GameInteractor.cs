@@ -13,41 +13,8 @@ namespace TextAdventure
     /// <summary>
     /// The point of this class is to provide functions that help the player interact with the game, while being easy to use and re-use from the developers perspective
     /// </summary>
-    public class PlayerInteractor
+    public class GameInteractor
     {
-        public delegate void ResponseBehaviour();
-
-        /// <summary>
-        /// Generic function for creating basic conversation loops, prints a message and options with which to respond
-        /// </summary>
-        /// <param name="message">The message that begins the conversation</param>
-        /// <param name="options">An array of options, that will be given to the user to choose from</param>
-        /// <param name="res">A number coresponding to the chosen option, starting from 0</param>
-        public static void Conversation(string message, string[] options, out int res)
-        {
-            bool loop = true;
-            res = -1;
-;
-            while (loop)
-            {
-                Console.Clear();
-                Console.WriteLine(message + "\n");
-                for (int i = 0; i < options.Length; i++)
-                    Console.WriteLine($"{i + 1}. {options[i]}");
-
-                if (int.TryParse(Console.ReadLine(), out res) && res > 0 && res <= options.Length)
-                {
-                    res--;
-                    loop = false;
-                }                   
-                else
-                {
-                    Console.WriteLine("Invalid input, type a corresponding number...");
-                    Console.ReadLine();
-                }
-            }
-        }
-
         //public static void AssesResponse(int res, params Action[] funcs) => funcs[res].Invoke();
         public static Dictionary<int, Action> responseDict;
 
@@ -61,7 +28,7 @@ namespace TextAdventure
                 {2, () => Help()},
                 {3, () => Exit()},
             };
-            Conversation(TextSource.mmWelocome, TextSource.mmOptions, out int res);
+            Helpers.Conversation(TextSource.mmWelocome, TextSource.mmOptions, out int res);
             responseDict[res].Invoke();
 
             //AssesResponse(res, NewGame, LoadGame, Help, Exit);
@@ -70,7 +37,7 @@ namespace TextAdventure
 
         public static void NewGame()
         {
-            Conversation(TextSource.newGameText, TextSource.newGameOptions, out int res);
+            Helpers.Conversation(TextSource.newGameText, TextSource.newGameOptions, out int res);
             if (res == 0)
             {
                 Game.player = new Player();
@@ -91,7 +58,7 @@ namespace TextAdventure
 
         public static void Help()
         {
-            Conversation(TextSource.helpText, TextSource.helpOptions, out int res);
+            Helpers.Conversation(TextSource.helpText, TextSource.helpOptions, out int res);
         }
 
         public static void Exit() // exits the game
@@ -111,7 +78,7 @@ namespace TextAdventure
                 {2, () => ShowInventory()},
             };
 
-            Conversation($"{TextSource.mainLoopText} {Game.location.Name}", TextSource.mainLoopOptions, out int res);
+            Helpers.Conversation($"{TextSource.mainLoopText} {Game.location.Name}", TextSource.mainLoopOptions, out int res);
             responseDict[res].Invoke();
             //AssesResponse(res, ChangeLocation, SearchLocation, ShowInventory);
             GameLoop();
@@ -120,7 +87,7 @@ namespace TextAdventure
 
         public static void ChangeLocation()
         {
-            Conversation(Game.nextLocation.Narrative, new string[] { "Go to the: " + Game.nextLocation.Name, "Back" }, out int res);
+            Helpers.Conversation(Game.nextLocation.Narrative, new string[] { "Go to the: " + Game.nextLocation.Name, "Back" }, out int res);
             if (res == 0)
             {
                 Game.location = Game.nextLocation;
@@ -167,7 +134,7 @@ namespace TextAdventure
             }
             
 
-            Conversation(TextSource.itemFoundText + " " + foundItem.Name, TextSource.itemFoundOptions, out int res);
+            Helpers.Conversation(TextSource.itemFoundText + " " + foundItem.Name, TextSource.itemFoundOptions, out int res);
             if (res == 0)
                 Game.player.Items.Add(foundItem);
             else
@@ -191,14 +158,14 @@ namespace TextAdventure
                 do
                 {
                     // choose action
-                    Conversation($"{TextSource.enemyEncounterText} {enemy.Name} - {enemy.Health} HP", TextSource.enemyEncounterOptions, out res); 
+                    Helpers.Conversation($"{TextSource.enemyEncounterText} {enemy.Name} - {enemy.Health} HP", TextSource.enemyEncounterOptions, out res); 
                     switch (res)
                     {
                         case 0: // ATTACK
-                            List<Weapon> weapons = GetItemsOfType<Weapon>(Game.player.Items);
-                            string[] weaponsNames = GetNames(weapons);
+                            List<Weapon> weapons = Helpers.GetItemsOfType<Weapon>(Game.player.Items);
+                            string[] weaponsNames = Helpers.GetNames(weapons);
 
-                            Conversation(TextSource.enemyFightText, weaponsNames, out res); // Choose weapon
+                            Helpers.Conversation(TextSource.enemyFightText, weaponsNames, out res); // Choose weapon
                             enemy.Health -= weapons[res].Damage;
                             weapons[res].Uses--;
 
@@ -212,9 +179,9 @@ namespace TextAdventure
                         case 1: // USE CONSUMABLE
                             if (Game.player.Health < 100)
                             {
-                                List<Consumable> consumables = GetItemsOfType<Consumable>(Game.player.Items);                                
-                                string[] consumableNames = GetNames(consumables);
-                                Conversation(TextSource.chooseConsumableText, consumableNames, out res);
+                                List<Consumable> consumables = Helpers.GetItemsOfType<Consumable>(Game.player.Items);                                
+                                string[] consumableNames = Helpers.GetNames(consumables);
+                                Helpers.Conversation(TextSource.chooseConsumableText, consumableNames, out res);
                                 consumables[res].Uses--;
                                 Game.player.Health = Game.player.Health + consumables[res].HealthRestore > 100 ? 100 : Game.player.Health + consumables[res].HealthRestore;
                                 Console.WriteLine($"You've healed yourself for {consumables[res].HealthRestore} health");
@@ -275,24 +242,8 @@ namespace TextAdventure
             Exit();
         }
 
-        public static List<itemType> GetItemsOfType<itemType>(List<Item> items) where itemType : Item
-        {
-            List<itemType> pickedItems = new List<itemType>();
-            foreach (var item in items)
-            {
-                if (item is itemType itemOfType)
-                    pickedItems.Add(itemOfType);          
-            }
-            return pickedItems;
-        }
 
-        public static string[] GetNames<itemType>(List<itemType> items) where itemType : Item
-        {
-            string[] res = new string[items.Count];
-            for (int i = 0; i < items.Count; i++)
-                res[i] = items[i].ToString();
-            return res;
-        }
+
 
 
 

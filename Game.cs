@@ -12,7 +12,7 @@ namespace TextAdventure
     {
         public static void Main()
         {
-            PlayerInteractor.MainMenu();
+            GameInteractor.MainMenu();
 
         }
     }
