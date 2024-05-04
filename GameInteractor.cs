@@ -28,7 +28,7 @@ namespace TextAdventure
                 {2, () => Help()},
                 {3, () => Exit()},
             };
-            Helpers.Conversation(TextSource.mmWelocome, TextSource.mmOptions, out int res);
+            Helpers.Conversation(TextSource.mmWelocome, TextSource.mmOptions.ToList<string>(), out int res, false);
             responseDict[res].Invoke();
 
             //AssesResponse(res, NewGame, LoadGame, Help, Exit);
@@ -37,7 +37,7 @@ namespace TextAdventure
 
         public static void NewGame()
         {
-            Helpers.Conversation(TextSource.newGameText, TextSource.newGameOptions, out int res);
+            Helpers.Conversation(TextSource.newGameText, TextSource.newGameOptions.ToList<string>(), out int res, true);
             if (res == 0)
             {
                 Game.player = new Player();
@@ -58,7 +58,7 @@ namespace TextAdventure
 
         public static void Help()
         {
-            Helpers.Conversation(TextSource.helpText, TextSource.helpOptions, out int res);
+            Helpers.Conversation(TextSource.helpText, TextSource.helpOptions.ToList<string>(), out int res, true);
         }
 
         public static void Exit() // exits the game
@@ -78,7 +78,7 @@ namespace TextAdventure
                 {2, () => ShowInventory()},
             };
 
-            Helpers.Conversation($"{TextSource.mainLoopText} {Game.location.Name}", TextSource.mainLoopOptions, out int res);
+            Helpers.Conversation($"{TextSource.mainLoopText} {Game.location.Name}", TextSource.mainLoopOptions.ToList<string>(), out int res, false);
             responseDict[res].Invoke();
             //AssesResponse(res, ChangeLocation, SearchLocation, ShowInventory);
             GameLoop();
@@ -87,7 +87,8 @@ namespace TextAdventure
 
         public static void ChangeLocation()
         {
-            Helpers.Conversation(Game.nextLocation.Narrative, new string[] { "Go to the: " + Game.nextLocation.Name, "Back" }, out int res);
+            List<string> options = new List<string> { $"{TextSource.changeLocationText} {Game.nextLocation.Name }" };
+            Helpers.Conversation(Game.nextLocation.Narrative, options , out int res, true);
             if (res == 0)
             {
                 Game.location = Game.nextLocation;
@@ -134,7 +135,7 @@ namespace TextAdventure
             }
             
 
-            Helpers.Conversation(TextSource.itemFoundText + " " + foundItem.Name, TextSource.itemFoundOptions, out int res);
+            Helpers.Conversation(TextSource.itemFoundText + " " + foundItem.Name, TextSource.itemFoundOptions.ToList<string>(), out int res, false);
             if (res == 0)
                 Game.player.Items.Add(foundItem);
             else
@@ -158,20 +159,20 @@ namespace TextAdventure
                 do
                 {
                     // choose action
-                    Helpers.Conversation($"{TextSource.enemyEncounterText} {enemy.Name} - {enemy.Health} HP", TextSource.enemyEncounterOptions, out res); 
+                    Helpers.Conversation($"{TextSource.enemyEncounterText} {enemy.Name} - {enemy.Health} HP", TextSource.enemyEncounterOptions.ToList<string>(), out res, false); 
                     switch (res)
                     {
                         case 0: // ATTACK
                             List<Weapon> weapons = Helpers.GetItemsOfType<Weapon>(Game.player.Items);
-                            string[] weaponsNames = Helpers.GetNames(weapons);
-
-                            Helpers.Conversation(TextSource.enemyFightText, weaponsNames, out res); // Choose weapon
+                            Helpers.Conversation(TextSource.enemyFightText, Helpers.GetNames(weapons), out res, true, "Cancel"); // Choose weapon
+                            if (res == -1) break;
                             enemy.Health -= weapons[res].Damage;
                             weapons[res].Uses--;
 
                             Console.WriteLine($"You've attacked the {enemy.Name} with {weapons[res].Name} for {weapons[res].Damage} HP");
                             if (weapons[res].Uses == 0) Game.player.Items.Remove(weapons[res]);
                             if (enemy.Health > 0) Console.WriteLine($"{enemy.Name} health is now {enemy.Health}");
+
                             else Console.WriteLine($"You've defeated the {enemy.Name}");
                             playerTurn = false;
                             Console.ReadLine();
@@ -179,9 +180,10 @@ namespace TextAdventure
                         case 1: // USE CONSUMABLE
                             if (Game.player.Health < 100)
                             {
-                                List<Consumable> consumables = Helpers.GetItemsOfType<Consumable>(Game.player.Items);                                
-                                string[] consumableNames = Helpers.GetNames(consumables);
-                                Helpers.Conversation(TextSource.chooseConsumableText, consumableNames, out res);
+                                List<Consumable> consumables = Helpers.GetItemsOfType<Consumable>(Game.player.Items);                                    
+                                Helpers.Conversation(TextSource.chooseConsumableText, Helpers.GetNames(consumables), out res, true, "Cancel");
+                                if (res == -1) break;
+
                                 consumables[res].Uses--;
                                 Game.player.Health = Game.player.Health + consumables[res].HealthRestore > 100 ? 100 : Game.player.Health + consumables[res].HealthRestore;
                                 Console.WriteLine($"You've healed yourself for {consumables[res].HealthRestore} health");

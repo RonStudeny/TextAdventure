@@ -60,21 +60,25 @@ namespace TextAdventure
         /// <param name="message">The message that begins the conversation</param>
         /// <param name="options">An array of options, that will be given to the user to choose from</param>
         /// <param name="res">A number coresponding to the chosen option, starting from 0</param>
-        public static void Conversation(string message, string[] options, out int res)
+        public static void Conversation(string message, List<string> options, out int res, bool backOption, string backText = "Back")
         {
             bool loop = true;
             res = -1;
-            ;
+            if (backOption)
+                options.Add(backText);
+            
             while (loop)
             {
                 Console.Clear();
                 Console.WriteLine(message + "\n");
-                for (int i = 0; i < options.Length; i++)
+                for (int i = 0; i < options.Count; i++)
                     Console.WriteLine($"{i + 1}. {options[i]}");
 
-                if (int.TryParse(Console.ReadLine(), out res) && res > 0 && res <= options.Length)
+                if (int.TryParse(Console.ReadLine(), out res) && res > 0 && res <= options.Count + 1)
                 {
-                    res--;
+                    if (backOption)
+                        res = res == options.Count ? -1 : --res;
+                    else --res;
                     loop = false;
                 }
                 else
@@ -96,11 +100,11 @@ namespace TextAdventure
             return pickedItems;
         }
 
-        public static string[] GetNames<itemType>(List<itemType> items) where itemType : Item
+        public static List<string> GetNames<itemType>(List<itemType> items) where itemType : Item
         {
-            string[] res = new string[items.Count];
+            List<string> res = new List<string>();
             for (int i = 0; i < items.Count; i++)
-                res[i] = items[i].ToString();
+                res.Add(items[i].ToString());
             return res;
         }
     }
