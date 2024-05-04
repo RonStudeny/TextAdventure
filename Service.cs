@@ -74,7 +74,7 @@ namespace TextAdventure
                 for (int i = 0; i < options.Count; i++)
                     Console.WriteLine($"{i + 1}. {options[i]}");
 
-                if (int.TryParse(Console.ReadLine(), out res) && res > 0 && res <= options.Count + 1)
+                if (int.TryParse(Console.ReadLine(), out res) && res > 0 && res < options.Count + 1)
                 {
                     if (backOption)
                         res = res == options.Count ? -1 : --res;

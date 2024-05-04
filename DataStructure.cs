@@ -134,7 +134,7 @@ namespace TextAdventure.DataStructure
 
         public override string ToString()
         {
-            return $"{Name} - {Damage}DMG - {Uses} uses left";
+            return $"{Name} - {Damage} DMG - {Uses} uses left";
         }
     }
 
@@ -153,7 +153,7 @@ namespace TextAdventure.DataStructure
 
         public override string ToString()
         {
-            return $"{Name} - restores {HealthRestore}HP - {Uses} uses left";
+            return $"{Name} - restores {HealthRestore} HP - {Uses} uses left";
         }
 
     }

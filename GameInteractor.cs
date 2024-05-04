@@ -150,7 +150,7 @@ namespace TextAdventure
         public static void Fight()
         {
             Random rng = new Random();
-            Enemy enemy = new Enemy (Game.location.EnemyPool[rng.Next(0, Game.location.EnemyPool.Length)]); // Choose the enemy
+            Enemy enemy = new Enemy (Game.location.EnemyPool[rng.Next(0, Game.location.EnemyPool.Length)]); // Choose the enemy out of location enemy pool
             bool escape = false;
             int res;
             do
@@ -163,77 +163,96 @@ namespace TextAdventure
                     switch (res)
                     {
                         case 0: // ATTACK
-                            List<Weapon> weapons = Helpers.GetItemsOfType<Weapon>(Game.player.Items);
+                            List<Weapon> weapons = Helpers.GetItemsOfType<Weapon>(Game.player.Items); // get weapons from inventory
                             Helpers.Conversation(TextSource.enemyFightText, Helpers.GetNames(weapons), out res, true, "Cancel"); // Choose weapon
-                            if (res == -1) break;
+                            if (res == -1) break; // cancel attack without losing the players turn
+                            // use the weapon and reduce its uses 
                             enemy.Health -= weapons[res].Damage;
-                            weapons[res].Uses--;
-
+                            weapons[res].Uses--; 
                             Console.WriteLine($"You've attacked the {enemy.Name} with {weapons[res].Name} for {weapons[res].Damage} HP");
-                            if (weapons[res].Uses == 0) Game.player.Items.Remove(weapons[res]);
+                            if (weapons[res].Uses == 0) Game.player.Items.Remove(weapons[res]); // remove the weapon from inventory if last use
+                            //print out the attack result
                             if (enemy.Health > 0) Console.WriteLine($"{enemy.Name} health is now {enemy.Health}");
-
                             else Console.WriteLine($"You've defeated the {enemy.Name}");
-                            playerTurn = false;
+
+                            playerTurn = false; //end player turn
                             Console.ReadLine();
                             break;
                         case 1: // USE CONSUMABLE
-                            if (Game.player.Health < 100)
+                            if (Game.player.Health < 100) // allow to use only if less then 100 hp
                             {
-                                List<Consumable> consumables = Helpers.GetItemsOfType<Consumable>(Game.player.Items);                                    
-                                Helpers.Conversation(TextSource.chooseConsumableText, Helpers.GetNames(consumables), out res, true, "Cancel");
-                                if (res == -1) break;
-
+                                List<Consumable> consumables = Helpers.GetItemsOfType<Consumable>(Game.player.Items); // get consumables from inventory                                    
+                                Helpers.Conversation(TextSource.chooseConsumableText, Helpers.GetNames(consumables), out res, true, "Cancel"); //choose consumable
+                                if (res == -1) break; // cancel item use
+                                // using the item
                                 consumables[res].Uses--;
+                                // restoring up to the 100 max hp
                                 Game.player.Health = Game.player.Health + consumables[res].HealthRestore > 100 ? 100 : Game.player.Health + consumables[res].HealthRestore;
+                                // print out the result
                                 Console.WriteLine($"You've healed yourself for {consumables[res].HealthRestore} health");
                                 Console.WriteLine($"Your current health is {Game.player.Health} HP");
-                                if (consumables[res].Uses == 0) Game.player.Items.Remove(consumables[res]);
+                                if (consumables[res].Uses == 0) Game.player.Items.Remove(consumables[res]); //remove consumable from inventory if used up
                             }
                             else Console.WriteLine(TextSource.consumableHealthFull);
                             Console.ReadLine();
                             break;
                         case 2: // RUN
-                            if (rng.Next(0, 5) == 1)
+                            if (rng.Next(0, 5) == 1) // successful escape 
                             {
                                 escape = true;
                                 playerTurn = false;
                                 Console.WriteLine(TextSource.runSuccessfulText);
                                 Console.ReadLine();
                             }
-                            else
+                            else // unsuccessful escape
                             {
                                 Console.WriteLine(TextSource.runUnsuccessfulText);
                                 playerTurn = false;
                                 Console.ReadLine();
                             }
+                            // in both cases end the players turn
                             break;
                     }
                 } while (playerTurn);
+                // after player turn, enemy attack, unless player escaped or defeated the enemy
                 if (escape == false && enemy.Health > 0)
                 {
                     Console.WriteLine($"{enemy.Name} attacked you for {enemy.Damage}HP!");
-                    if (Game.player.Health - enemy.Damage > 0)
+                    if (Game.player.Health - enemy.Damage > 0) // check if damage isn't fatal
                     {
-                        Game.player.Health -= enemy.Damage;
+                        Game.player.Health -= enemy.Damage; // player damage
                         Console.WriteLine($"You're now at {Game.player.Health}HP");
                     }
                         
-                    else
+                    else // player death
                     {
                         Game.player.Health = 0;
                         GameOver();
                     }
                     Console.ReadLine();
                 }
-            } while (!escape && enemy.Health > 0);
+            } while (!escape && enemy.Health > 0); // loop while player is alive, hasn't escaped and the enemy is alive
 
         }
 
 
         public static void ShowInventory()
         {
-            Console.WriteLine("*inventory dialogue*");
+            Console.Clear();
+            Console.WriteLine("Weapons:");
+            foreach (var item in Helpers.GetItemsOfType<Weapon>(Game.player.Items))
+                Console.WriteLine(item.ToString());
+            Console.WriteLine();
+
+            Console.WriteLine("Consumables:");
+            foreach (var item in Helpers.GetItemsOfType<Consumable>(Game.player.Items))
+                Console.WriteLine(item.ToString());
+            Console.WriteLine();
+
+            Console.WriteLine("Crafting items:");
+            foreach (var item in Helpers.GetItemsOfType<CraftItem>(Game.player.Items))
+                Console.WriteLine(item.ToString());
+            Console.WriteLine();
             Console.ReadLine();
         }
 
