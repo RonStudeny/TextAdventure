@@ -40,9 +40,22 @@ namespace TextAdventure
             return responseContent;
         }
 
-        public static void SaveToFile()
+        public static bool SaveGameToFile(string fileName, GameData game, out Exception? e)
         {
-            throw new NotImplementedException();
+            fileName = fileName + ".json";
+            string jsonPayload = JsonConvert.SerializeObject(game);
+            try
+            {
+                File.WriteAllText(fileName, jsonPayload);
+                e = null;
+                return true;
+            }
+            catch (Exception exc)
+            {
+                e = exc;
+                return false;
+            }
+
         }
 
         public static bool LoadFromFile()

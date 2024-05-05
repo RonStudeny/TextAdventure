@@ -94,6 +94,13 @@ namespace TextAdventure.DataStructure
         public static Location[] locations = { Forest, City, Base };
     }
 
+    public class GameData
+    {
+        public Player player;
+        public Location location, nextLocation;
+        public GameData game;
+    }
+
     public class Player
     {
 

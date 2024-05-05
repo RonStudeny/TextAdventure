@@ -17,8 +17,13 @@ namespace TextAdventure.Text
         public static string helpText = "*very useful info*";
         public static string[] helpOptions = { "help1", "help2" };
 
+        public static string saveGameText = "Type file name to save your progress\nTip: Type an existing file name to override the given file or type 'cancel' to cancel saving";
+        public static string saveGameSuccess = "Game saved successfuly as";
+        public static string saveGameFailure = "Error while saving the game";
+        public static string saveGameCancel = "Saving canceled...";
+
         public static string mainLoopText = "You are in a";
-        public static string[] mainLoopOptions = { "Go", "Search", "Inventory" };
+        public static string[] mainLoopOptions = { "Go", "Search", "Inventory", "Save game" };
 
         public static string[] locations = { "Forest", "Abandoned city", "Military base" };
         public static string[] locationNarratives = { 
