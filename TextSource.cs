@@ -8,6 +8,7 @@ namespace TextAdventure.Text
 {
     public class TextSource
     {
+        public static string saveFileDir = ".\\saves\\";
         public static string mmWelocome = "Welcome to text adventure, please select an action";
         public static string[] mmOptions = { "Start", "Load", "Help", "Quit" };
 

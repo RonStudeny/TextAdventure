@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TextAdventure.DataStructure;
+using TextAdventure.Text;
 
 namespace TextAdventure
 {
@@ -46,7 +47,7 @@ namespace TextAdventure
             string jsonPayload = JsonConvert.SerializeObject(game);
             try
             {
-                File.WriteAllText(fileName, jsonPayload);
+                File.WriteAllText(TextSource.saveFileDir + fileName, jsonPayload);
                 e = null;
                 return true;
             }
@@ -58,9 +59,23 @@ namespace TextAdventure
 
         }
 
-        public static bool LoadFromFile()
+        public static bool LoadFromFile(string fileName, out GameData game, out Exception? e)
         {
-            throw new NotImplementedException();
+            fileName = TextSource.saveFileDir + fileName;
+            try
+            {
+                game = JsonConvert.DeserializeObject<GameData>(File.ReadAllText(fileName));
+                e = null;
+                return true;
+            }
+            catch(Exception exc)
+            {
+                e = exc;
+                game = null;
+                return false;
+            }
+
+           
         }
 
     }

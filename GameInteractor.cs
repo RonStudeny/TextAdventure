@@ -67,7 +67,7 @@ namespace TextAdventure
         public static void LoadGame()
         {
             Console.WriteLine("*Load game menu*");
-            Service.LoadFromFile();
+            Service.LoadFromFile("game.json", out Game.currentGame, out Exception? e);
             GameLoop();
         }
 
