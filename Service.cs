@@ -44,10 +44,14 @@ namespace TextAdventure
         public static bool SaveGameToFile(string fileName, GameData game, out Exception? e)
         {
             fileName = fileName + ".json";
+            string path = Path.Combine(TextSource.saveFileDir, fileName);
             string jsonPayload = JsonConvert.SerializeObject(game);
             try
             {
-                File.WriteAllText(TextSource.saveFileDir + fileName, jsonPayload);
+                string dir = Path.GetDirectoryName(path);
+                if (!Directory.Exists(dir))
+                    Directory.CreateDirectory(dir);
+                File.WriteAllText(path, jsonPayload);
                 e = null;
                 return true;
             }
@@ -59,12 +63,11 @@ namespace TextAdventure
 
         }
 
-        public static bool LoadFromFile(string fileName, out GameData game, out Exception? e)
+        public static bool LoadFromFile(string filePath, out GameData game, out Exception? e)
         {
-            fileName = TextSource.saveFileDir + fileName;
             try
             {
-                game = JsonConvert.DeserializeObject<GameData>(File.ReadAllText(fileName));
+                game = JsonConvert.DeserializeObject<GameData>(File.ReadAllText(filePath));
                 e = null;
                 return true;
             }
@@ -74,8 +77,6 @@ namespace TextAdventure
                 game = null;
                 return false;
             }
-
-           
         }
 
     }
@@ -134,6 +135,11 @@ namespace TextAdventure
             for (int i = 0; i < items.Count; i++)
                 res.Add(items[i].ToString());
             return res;
+        }
+
+        public static List<string> GetFilePaths()
+        {
+            return Directory.GetFiles(Path.Combine(TextSource.saveFileDir)).ToList<string>();
         }
     }
 }

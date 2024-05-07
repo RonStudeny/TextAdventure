@@ -8,7 +8,7 @@ namespace TextAdventure.Text
 {
     public class TextSource
     {
-        public static string saveFileDir = ".\\saves\\";
+        public static string saveFileDir = "saves";
         public static string mmWelocome = "Welcome to text adventure, please select an action";
         public static string[] mmOptions = { "Start", "Load", "Help", "Quit" };
 
@@ -17,6 +17,10 @@ namespace TextAdventure.Text
 
         public static string helpText = "*very useful info*";
         public static string[] helpOptions = { "help1", "help2" };
+
+        public static string loadGameText = "Please select a save file:";
+        public static string loadGameLoading = "Loading the game...";
+        public static string loadGameFailed = "Couldn't load the save file, it may be corrupted. Reason:";
 
         public static string saveGameText = "Type file name to save your progress\nTip: Type an existing file name to override the given file or type 'cancel' to cancel saving";
         public static string saveGameSuccess = "Game saved successfuly as";

@@ -56,7 +56,7 @@ namespace TextAdventure
             string fileName = Console.ReadLine().ToLower();
             if (fileName != null && fileName != "cancel")
             {
-                if (Service.SaveGameToFile(fileName, Game.currentGame, out Exception e))
+                if (Service.SaveGameToFile(fileName, Game.currentGame, out Exception? e))
                     Console.WriteLine($"{TextSource.saveGameSuccess} as '{fileName}'");
                 else Console.WriteLine($"{TextSource.saveGameFailure} reason: {e.Message}..");
             }
@@ -66,9 +66,23 @@ namespace TextAdventure
 
         public static void LoadGame()
         {
-            Console.WriteLine("*Load game menu*");
-            Service.LoadFromFile("game.json", out Game.currentGame, out Exception? e);
-            GameLoop();
+            Game.currentGame.player = new Player();
+            Game.currentGame.location = Location.GetNewLocation();
+            Game.currentGame.nextLocation = Location.GetNewLocation();
+
+            List<string> files = Helpers.GetFilePaths();
+            Helpers.Conversation(TextSource.loadGameText,files, out int res, true);
+            if (res >= 0)
+            {
+                if (Service.LoadFromFile(files[res], out Game.currentGame, out Exception? e))
+                {
+                    Console.WriteLine(TextSource.loadGameText);
+                    GameLoop();
+                }
+                else Console.WriteLine($"{TextSource.loadGameFailed} reason: {e.Message}..");
+                Console.ReadLine();
+            }
+            
         }
 
         public static void Help()
