@@ -43,15 +43,21 @@ namespace TextAdventure
 
         public static bool SaveGameToFile(string fileName, GameData game, out Exception? e)
         {
+            JsonSerializerSettings settings = new JsonSerializerSettings()
+            {
+                TypeNameHandling = TypeNameHandling.Auto
+            };
+
             fileName = fileName + ".json";
             string path = Path.Combine(TextSource.saveFileDir, fileName);
-            string jsonPayload = JsonConvert.SerializeObject(game);
+ 
+            string jsonPayload = JsonConvert.SerializeObject(game, settings);
             try
             {
                 string dir = Path.GetDirectoryName(path);
                 if (!Directory.Exists(dir))
                     Directory.CreateDirectory(dir);
-                File.WriteAllText(path, jsonPayload);
+                File.WriteAllText(fileName, jsonPayload);
                 e = null;
                 return true;
             }
