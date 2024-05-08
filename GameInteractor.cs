@@ -71,7 +71,8 @@ namespace TextAdventure
             Game.currentGame.nextLocation = Location.GetNewLocation();
 
             List<string> files = Helpers.GetFilePaths();
-            Helpers.Conversation(TextSource.loadGameText,files, out int res, true);
+            List<string> fileNames = Helpers.GetFileNames(files);
+            Helpers.Conversation(TextSource.loadGameText, fileNames, out int res, true);
             if (res >= 0)
             {
                 if (Service.LoadFromFile(files[res], out Game.currentGame, out Exception? e))
@@ -227,7 +228,7 @@ namespace TextAdventure
                             Console.ReadLine();
                             break;
                         case 2: // RUN
-                            if (rng.Next(0, 5) == 1) // successful escape 
+                            if (rng.Next(0, 1) == 0) // successful escape 
                             {
                                 escape = true;
                                 playerTurn = false;

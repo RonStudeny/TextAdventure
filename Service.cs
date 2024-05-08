@@ -50,14 +50,13 @@ namespace TextAdventure
 
             fileName = fileName + ".json";
             string path = Path.Combine(TextSource.saveFileDir, fileName);
- 
             string jsonPayload = JsonConvert.SerializeObject(game, settings);
             try
             {
                 string dir = Path.GetDirectoryName(path);
                 if (!Directory.Exists(dir))
                     Directory.CreateDirectory(dir);
-                File.WriteAllText(fileName, jsonPayload);
+                File.WriteAllText(path, jsonPayload);
                 e = null;
                 return true;
             }
@@ -71,9 +70,13 @@ namespace TextAdventure
 
         public static bool LoadFromFile(string filePath, out GameData game, out Exception? e)
         {
+            JsonSerializerSettings settings = new JsonSerializerSettings()
+            {
+                TypeNameHandling = TypeNameHandling.Auto
+            };
             try
             {
-                game = JsonConvert.DeserializeObject<GameData>(File.ReadAllText(filePath));
+                game = JsonConvert.DeserializeObject<GameData>(File.ReadAllText(filePath), settings);
                 e = null;
                 return true;
             }
@@ -146,6 +149,14 @@ namespace TextAdventure
         public static List<string> GetFilePaths()
         {
             return Directory.GetFiles(Path.Combine(TextSource.saveFileDir)).ToList<string>();
+        }
+
+        public static List<string> GetFileNames(List<string> paths)
+        {
+            List<string> res =  new List<string>();
+            foreach (var filePath in paths)
+                res.Add(Path.GetFileName(filePath));
+            return res;
         }
     }
 }
