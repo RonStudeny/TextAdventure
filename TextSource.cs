@@ -30,13 +30,6 @@ namespace TextAdventure.Text
         public static string mainLoopText = "You are in a";
         public static string[] mainLoopOptions = { "Go", "Search", "Inventory", "Save game" };
 
-        public static string[] locations = { "Forest", "Abandoned city", "Military base" };
-        public static string[] locationNarratives = { 
-            "A dark forest full of mistery opens before your",
-            "You see the edge of a once blooming city, now abandoned to it's fate",
-            "You've stumbled upon a military base"
-        };
-
         public static string changeLocationText = "Go to the: ";
 
 

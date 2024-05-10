@@ -228,7 +228,7 @@ namespace TextAdventure
                             Console.ReadLine();
                             break;
                         case 2: // RUN
-                            if (rng.Next(0, 1) == 0) // successful escape 
+                            if (rng.Next(0, 3) == 0) // successful escape 
                             {
                                 escape = true;
                                 playerTurn = false;

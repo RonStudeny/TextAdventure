@@ -14,24 +14,34 @@ namespace TextAdventure.DataStructure
         public static Consumable Mushroom = new Consumable()
         {
             Name = "Mushroom",
-            Description = "A mushroom you found in the forest, should have a positive impact on your health... surely",
+            Description = "Smells weird and tastes even weirder, but it seems to have a positive effect on your health",
             HealthRestore = 15,
             Uses = 1
+        };
+
+        public static Consumable Medkit = new Consumable()
+        {
+            Name = "First-aid kit",
+            Description = "All the tools neceseary to treat minor wounds and take care of infection",
+            HealthRestore = 30,
+            Uses = 2
         };
 
         public static CraftItem Stick = new CraftItem()
         {
             Name = "Stick",
-            Description = "It's a wooden stick, suitable for making primitve weaponary like bows, spears and arrows",
+            Description = "A wooden stick, suitable for making primitve weaponary like bows, spears and arrows",
         };
 
         public static Weapon Stone = new Weapon()
         {
             Name = "Stone",
-            Description = "A rock you've found on the ground, suitable for... like bashing your enemies' skull in",
+            Description = "A rock, pebble, stone even, suitable for... like bashing your enemies' skull in",
             Damage = 5,
-            Uses = 10
+            Uses = 2
         };
+
+        
         #endregion
 
         #region Enemies
@@ -62,7 +72,7 @@ namespace TextAdventure.DataStructure
         public static Location Forest = new Location()
         {
             Name = "Forest",
-            Narrative = TextSource.locationNarratives[0],
+            Narrative = "A dark forest full of mistery opens before your",
             Searches = 3,
             SearchChances = 5,
             ItemPool = new Item[]{ Mushroom, Stick, Stone },
@@ -72,7 +82,7 @@ namespace TextAdventure.DataStructure
         public static Location City = new Location()
         {
             Name = "Abandoned city",
-            Narrative = TextSource.locationNarratives[1],
+            Narrative = "You see the edge of a once blooming city, now abandoned to it's fate",
             Searches = 6,
             SearchChances = 8,
             ItemPool = new Item[] { Mushroom, Stick, Stone },
@@ -82,7 +92,7 @@ namespace TextAdventure.DataStructure
         public static Location Base = new Location()
         {
             Name = "Military base",
-            Narrative = TextSource.locationNarratives[2],
+            Narrative = "You've stumbled upon a military base",
             Searches = 5,
             SearchChances = 4,
             ItemPool = new Item[] { Mushroom, Stick, Stone },
