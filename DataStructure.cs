@@ -27,6 +27,14 @@ namespace TextAdventure.DataStructure
             Uses = 2
         };
 
+        public static Consumable HandSanitizor = new Consumable()
+        {
+            Name = "Hand sanitizor",
+            Description = "Kills 99.99% of all the germs",
+            HealthRestore = 5,
+            Uses = 15
+        };
+
         public static CraftItem Stick = new CraftItem()
         {
             Name = "Stick",
@@ -39,6 +47,14 @@ namespace TextAdventure.DataStructure
             Description = "A rock, pebble, stone even, suitable for... like bashing your enemies' skull in",
             Damage = 5,
             Uses = 2
+        };
+
+        public static Weapon MilitaryKnife = new Weapon()
+        {
+            Name = "Military-grade knife",
+            Description = "Useful for hand to hand combat, sharp as a knife... because it is",
+            Damage = 35,
+            Uses = 10
         };
 
         

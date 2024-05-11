@@ -11,6 +11,7 @@ namespace TextAdventure
 {
     public class Service
     {
+        /*
         private static readonly HttpClient _httpClient = new HttpClient();
 
         public static string apiKey = "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";
@@ -40,6 +41,8 @@ namespace TextAdventure
 
             return responseContent;
         }
+
+        */
 
         public static bool SaveGameToFile(string fileName, GameData game, out Exception? e)
         {
