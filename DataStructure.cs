@@ -19,6 +19,22 @@ namespace TextAdventure.DataStructure
             Uses = 1
         };
 
+        public static Consumable Berries = new Consumable()
+        {
+            Name = "Bush berries",
+            Description = "These berries grow everywhere in this forest, but are they edible? time to find out...",
+            HealthRestore = 5,
+            Uses = 1
+        };
+
+        public static Consumable MRE = new Consumable()
+        {
+            Name = "Military MRE",
+            Description = "Meal. Ready. to Eat. it doesn't look appetising, but it'll do",
+            HealthRestore = 25,
+            Uses = 1
+        };
+
         public static Consumable Medkit = new Consumable()
         {
             Name = "First-aid kit",
@@ -27,9 +43,9 @@ namespace TextAdventure.DataStructure
             Uses = 2
         };
 
-        public static Consumable HandSanitizor = new Consumable()
+        public static Consumable HandSanitizer = new Consumable()
         {
-            Name = "Hand sanitizor",
+            Name = "Hand sanitizer",
             Description = "Kills 99.99% of all the germs",
             HealthRestore = 5,
             Uses = 15
@@ -46,7 +62,7 @@ namespace TextAdventure.DataStructure
             Name = "Stone",
             Description = "A rock, pebble, stone even, suitable for... like bashing your enemies' skull in",
             Damage = 5,
-            Uses = 2
+            Uses = 1
         };
 
         public static Weapon MilitaryKnife = new Weapon()
@@ -54,7 +70,39 @@ namespace TextAdventure.DataStructure
             Name = "Military-grade knife",
             Description = "Useful for hand to hand combat, sharp as a knife... because it is",
             Damage = 35,
-            Uses = 10
+            Uses = 5
+        };
+
+        public static Weapon KitchenKnife = new Weapon()
+        {
+            Name = "Kitchen knife",
+            Description = "A little bit dull, but still pointy enough to seriusly hurt something",
+            Damage = 15,
+            Uses = 3
+        };
+
+        public static Weapon Pistol = new Weapon()
+        {
+            Name = "9mm pistol",
+            Description = "A 1911 Colt handgun with a full magazine",
+            Damage = 40,
+            Uses = 3
+        };
+
+        public static Weapon M16 = new Weapon()
+        {
+            Name = "M16 assault rifle",
+            Description = "A fully loaded assault rifle just begging to be used... what could possibly go wrong",
+            Damage = 60,
+            Uses = 5
+        };
+
+        public static Weapon Grenade = new Weapon()
+        {
+            Name = "Hand grenade",
+            Description = "A High explosive hand grenade, definitely single-use",
+            Damage = 120,
+            Uses = 1
         };
 
         
@@ -82,6 +130,19 @@ namespace TextAdventure.DataStructure
             Damage = 1
         };
 
+        public static Enemy Zombie = new Enemy()
+        {
+            Name = "Zombie",
+            Health = 85,
+            Damage = 15
+        };
+        public static Enemy ArmoredZombie = new Enemy()
+        {
+            Name = "Armored zombie",
+            Health = 150,
+            Damage = 8
+        };
+
         #endregion
 
         #region Locations
@@ -89,9 +150,9 @@ namespace TextAdventure.DataStructure
         {
             Name = "Forest",
             Narrative = "A dark forest full of mistery opens before your",
-            Searches = 3,
-            SearchChances = 5,
-            ItemPool = new Item[]{ Mushroom, Stick, Stone },
+            Searches = 10,
+            SearchChances = 10,
+            ItemPool = new Item[]{ Mushroom, Stick, Stone, Berries },
             EnemyPool = new Enemy[] { Gnome, Bear, Rat}
         };
 
@@ -100,19 +161,19 @@ namespace TextAdventure.DataStructure
             Name = "Abandoned city",
             Narrative = "You see the edge of a once blooming city, now abandoned to it's fate",
             Searches = 6,
-            SearchChances = 8,
-            ItemPool = new Item[] { Mushroom, Stick, Stone },
-            EnemyPool = new Enemy[] { Gnome, Bear, Rat }
+            SearchChances = 4,
+            ItemPool = new Item[] { HandSanitizer, KitchenKnife, Medkit, Pistol, Mushroom, Stick, Stone },
+            EnemyPool = new Enemy[] {Zombie, Rat }
         };
 
         public static Location Base = new Location()
         {
             Name = "Military base",
             Narrative = "You've stumbled upon a military base",
-            Searches = 5,
-            SearchChances = 4,
-            ItemPool = new Item[] { Mushroom, Stick, Stone },
-            EnemyPool = new Enemy[] { Gnome, Bear, Rat }
+            Searches = 8,
+            SearchChances = 3,
+            ItemPool = new Item[] { MilitaryKnife, MRE, M16, Grenade, Stick, Stone, Mushroom },
+            EnemyPool = new Enemy[] { ArmoredZombie, Zombie, Rat }
         };
 
         #endregion
@@ -229,18 +290,20 @@ namespace TextAdventure.DataStructure
         }
         public string Name { get; set; }
         public string Narrative { get; set; }
-        public int Searches { get; set; }
-        public int SearchChances { get; set; }
+        public int Searches { get; set; } // how many times can player search the place
+        public int SearchChances
+        {
+            get { return _searchChances; }
+            set
+            {
+                if (value <= 0) throw new ArgumentException("Value must be bigger than 0");
+                else _searchChances = value;
+            }
+        }// the chance of player finding an enemy (1 == 100%, 2 == 50% ...)
         public Item[] ItemPool { get; set; }
         public Enemy[] EnemyPool { get; set; }
 
+        private int _searchChances;
 
-        public static Location GetNewLocation()
-        {
-            //throw new Exception("This function is obsolete, please use Templates class for location, enemy and item instances");
-            Random rng = new Random();
-            return new Location(Templates.locations[rng.Next(0, Templates.locations.Length)]);
-            
-        }
     }
 }

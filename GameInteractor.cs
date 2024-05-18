@@ -41,8 +41,8 @@ namespace TextAdventure
             if (res == 0)
             {
                 Game.currentGame.player = new Player();
-                Game.currentGame.location = Location.GetNewLocation();
-                Game.currentGame.nextLocation = Location.GetNewLocation();
+                Game.currentGame.location = Helpers.GetNewLocation();
+                Game.currentGame.nextLocation = Helpers.GetNewLocation();
                 GameLoop();
             }
             
@@ -66,10 +66,6 @@ namespace TextAdventure
 
         public static void LoadGame()
         {
-            Game.currentGame.player = new Player();
-            Game.currentGame.location = Location.GetNewLocation();
-            Game.currentGame.nextLocation = Location.GetNewLocation();
-
             List<string> files = Helpers.GetFilePaths();
             List<string> fileNames = Helpers.GetFileNames(files);
             Helpers.Conversation(TextSource.loadGameText, fileNames, out int res, true);
@@ -91,10 +87,23 @@ namespace TextAdventure
             Helpers.Conversation(TextSource.helpText, TextSource.helpOptions.ToList<string>(), out int res, true);
         }
 
-        public static void Exit() // exits the game
+        public static void Exit(bool showWarning = false) // exits the game
         {
-            Console.WriteLine("*Game exited*");
-            Environment.Exit(0);
+            if (showWarning)
+            {
+               Helpers.Conversation(TextSource.exitText, TextSource.exitOptions.ToList<string>(), out int res, false);
+               if (res == 0)
+                {
+                    Console.WriteLine("Game exited...");
+                    Environment.Exit(0);
+                }
+            }
+            else
+            {
+                Console.WriteLine("Game exited...");
+                Environment.Exit(0);
+            }
+
         }
         #endregion
 
@@ -107,6 +116,7 @@ namespace TextAdventure
                 {1, () => SearchLocation(Game.currentGame.location.SearchChances)},
                 {2, () => ShowInventory()},
                 {3, () => SaveGame() },
+                {4, () => Exit(true)},
             };
 
             Helpers.Conversation($"{TextSource.mainLoopText} {Game.currentGame.location.Name}", TextSource.mainLoopOptions.ToList<string>(), out int res, false);
@@ -123,7 +133,7 @@ namespace TextAdventure
             if (res == 0)
             {
                 Game.currentGame.location = Game.currentGame.nextLocation;
-                Game.currentGame.nextLocation = Location.GetNewLocation();
+                Game.currentGame.nextLocation = Helpers.GetNewLocation();
             }
         }
         
@@ -166,7 +176,7 @@ namespace TextAdventure
             }
             
 
-            Helpers.Conversation(TextSource.itemFoundText + " " + foundItem.Name, TextSource.itemFoundOptions.ToList<string>(), out int res, false);
+            Helpers.Conversation(TextSource.itemFoundText + " " + foundItem.Name + "\n" + foundItem.Description, TextSource.itemFoundOptions.ToList<string>(), out int res, false);
             if (res == 0)
                 Game.currentGame.player.Items.Add(foundItem);
             else

@@ -130,6 +130,15 @@ namespace TextAdventure
             }
         }
 
+
+        public static Location GetNewLocation()
+        {
+            //throw new Exception("This function is obsolete, please use Templates class for location, enemy and item instances");
+            Random rng = new Random();
+            return new Location(Templates.locations[rng.Next(0, Templates.locations.Length)]);
+
+        }
+
         public static List<itemType> GetItemsOfType<itemType>(List<Item> items) where itemType : Item
         {
             List<itemType> pickedItems = new List<itemType>();
@@ -161,5 +170,7 @@ namespace TextAdventure
                 res.Add(Path.GetFileName(filePath));
             return res;
         }
+
+
     }
 }

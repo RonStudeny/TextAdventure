@@ -28,7 +28,7 @@ namespace TextAdventure.Text
         public static string saveGameCancel = "Saving canceled...";
 
         public static string mainLoopText = "You are in a";
-        public static string[] mainLoopOptions = { "Go", "Search", "Inventory", "Save game" };
+        public static string[] mainLoopOptions = { "Go", "Search", "Inventory", "Save game", "Quit" };
 
         public static string changeLocationText = "Go to the: ";
 
@@ -48,6 +48,9 @@ namespace TextAdventure.Text
 
         public static string runSuccessfulText = "You've decided that fighting isn't an option and ran away";
         public static string runUnsuccessfulText = "You tried to run away but you triped and fell and the enemy has caught up";
+
+        public static string exitText = "Any unsaved progress will be lost, are you sure?";
+        public static string[] exitOptions = { "YES - exit", "NO - cancel" };
 
 
     }
