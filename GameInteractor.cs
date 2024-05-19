@@ -11,14 +11,16 @@ using TextAdventure.Text;
 namespace TextAdventure
 {
     /// <summary>
-    /// The point of this class is to provide functions that help the player interact with the game, while being easy to use and re-use from the developers perspective
+    /// The point of this class is to provide functions that interact between the player and the game, while being easy to use and re-use from the developers perspective
     /// </summary>
     public class GameInteractor
     {
-        //public static void AssesResponse(int res, params Action[] funcs) => funcs[res].Invoke();
+        // Dictionary used for handling player response, takes an int as a key and runs the desired function, corresponding to the player's choice
         public static Dictionary<int, Action> responseDict;
 
         #region Menu functions
+        
+        // First function ran from the entry point, provides a couple of main menu options
         public static void MainMenu()
         {
             responseDict = new Dictionary<int, Action>
@@ -35,6 +37,7 @@ namespace TextAdventure
             MainMenu();
         }
 
+        // sets up a new game without creating or overriding any existing files
         public static void NewGame()
         {
             Helpers.Conversation(TextSource.newGameText, TextSource.newGameOptions.ToList<string>(), out int res, true);
@@ -48,6 +51,7 @@ namespace TextAdventure
             
         }
 
+        // creates a new .json file or writes to an already existing one based on file name, serializes all the neceseary class instances to save the player's progress
         public static void SaveGame()
         {
             Console.Clear();
@@ -56,7 +60,7 @@ namespace TextAdventure
             string fileName = Console.ReadLine().ToLower();
             if (fileName != null && fileName != "cancel")
             {
-                if (Service.SaveGameToFile(fileName, Game.currentGame, out Exception? e))
+                if (FileAccess.SaveGameToFile(fileName, Game.currentGame, out Exception? e))
                     Console.WriteLine($"{TextSource.saveGameSuccess} as '{fileName}'");
                 else Console.WriteLine($"{TextSource.saveGameFailure} reason: {e.Message}..");
             }
@@ -64,6 +68,7 @@ namespace TextAdventure
             Console.ReadLine();
         }
 
+        // loads .json file names from a specified dictionary and let's the player choose which game file to load
         public static void LoadGame()
         {
             List<string> files = Helpers.GetFilePaths();
@@ -71,7 +76,7 @@ namespace TextAdventure
             Helpers.Conversation(TextSource.loadGameText, fileNames, out int res, true);
             if (res >= 0)
             {
-                if (Service.LoadFromFile(files[res], out Game.currentGame, out Exception? e))
+                if (FileAccess.LoadFromFile(files[res], out Game.currentGame, out Exception? e))
                 {
                     Console.WriteLine(TextSource.loadGameText);
                     GameLoop();
@@ -81,12 +86,13 @@ namespace TextAdventure
             }
             
         }
-
+        // simple game rule overview
         public static void Help()
         {
             Helpers.Conversation(TextSource.helpText, TextSource.helpOptions.ToList<string>(), out int res, true);
         }
 
+        // exit function, parameter is used to ask the player to confirm that they want to quit the game
         public static void Exit(bool showWarning = false) // exits the game
         {
             if (showWarning)
@@ -107,7 +113,7 @@ namespace TextAdventure
         }
         #endregion
 
-        // Main "cycle" in which player chooses actions and the game responds, the loop is done recursivly as to avoid unneceseary conditions
+        // Main "cycle" in which player chooses actions and the game responds, the loop is done recursivly as to avoid unneceseary conditions and loops 
         public static void GameLoop()
         {
             responseDict = new Dictionary<int, Action>
@@ -126,6 +132,7 @@ namespace TextAdventure
 
         }
 
+        // creates new location instances
         public static void ChangeLocation()
         {
             List<string> options = new List<string> { $"{TextSource.changeLocationText} {Game.currentGame.nextLocation.Name }" };
@@ -137,7 +144,7 @@ namespace TextAdventure
             }
         }
         
-
+        // the player searches the location, based on the chances parameter is awarded either an item or encounters an enemy (chances == 1 - 100 % enemy; 2 - 50% enemy...)
         public static void SearchLocation(int chances)
         {
             Random rng = new Random();
@@ -155,6 +162,7 @@ namespace TextAdventure
             }
         }
 
+        // if an item is found during the SearchLocation() function call, it is generated here based on the location's item pool and added (or discarded) to the players inventory
         public static void GrantItem()
         {
             Random rng = new Random();
@@ -187,6 +195,9 @@ namespace TextAdventure
 
             
         }
+
+        // if an enemy is encountered during SearchLocation() function call, this function is called where an enemy is chosen based on the location
+        // the player has the options to Fight, Heal or Run
 
         public static void Fight()
         {
@@ -276,7 +287,7 @@ namespace TextAdventure
 
         }
 
-
+        // Prints out the player's whole inventory divided by different item types
         public static void ShowInventory()
         {
             Console.Clear();
@@ -297,6 +308,7 @@ namespace TextAdventure
             Console.ReadLine();
         }
 
+        // this function is called if the player looses a fight (his Health reaches 0)
         public static void GameOver()
         {
             Console.WriteLine("Bruh you died...");

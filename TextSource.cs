@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace TextAdventure.Text
 {
+    /// <summary>
+    /// This class consists of static string variables containing all the different conversation prompts and options the player gets to choose from
+    /// </summary>
     public class TextSource
     {
         public static string saveFileDir = "saves";

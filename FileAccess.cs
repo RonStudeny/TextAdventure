@@ -9,41 +9,18 @@ using TextAdventure.Text;
 
 namespace TextAdventure
 {
-    public class Service
+    /// <summary>
+    /// Contains static methods for Saving and Loading GameData class instances
+    /// </summary>
+    public class FileAccess
     {
-        /*
-        private static readonly HttpClient _httpClient = new HttpClient();
-
-        public static string apiKey = "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";
-        public static string endPoint = "https://api.openai.com/v1/completions";
-        public static string modelType = "gpt-3.5-turbo-instruct";
-        public static int maxTokens = 256;
-        public static double temp = 1.0f;
-
-        public static async Task<string> OpenAIComplete(string _apikey, string _endpoint, string _model, int _maxTokens, double _temp)
-        {
-            var requestBody = new
-            {
-                model = modelType,
-                prompt = "Hello world",
-                //max_tokens = maxTokens,
-                temperature = temp
-            };
-
-            string jsonPayload = JsonConvert.SerializeObject(requestBody);
-
-            var request = new HttpRequestMessage(HttpMethod.Post, endPoint);
-            request.Headers.Add("Authorization", $"Bearer {apiKey}");
-            request.Content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
-
-            var httpResponse = await _httpClient.SendAsync(request);
-            string responseContent = await httpResponse.Content.ReadAsStringAsync();
-
-            return responseContent;
-        }
-
-        */
-
+        /// <summary>
+        /// Serializes the GameData instance and tries to save it to the location, if succesful, returns true and the exception variable stays null
+        /// </summary>
+        /// <param name="fileName">Specified file name, if exists, function overrides existing data</param>
+        /// <param name="game">GameData instance to serialize</param>
+        /// <param name="e">out argument containing the exception caused by an unsucessful file writing, otherwise null</param>
+        /// <returns>true if all text is written successfuly, otherwise false and e argument contains the exception</returns>
         public static bool SaveGameToFile(string fileName, GameData game, out Exception? e)
         {
             JsonSerializerSettings settings = new JsonSerializerSettings()
@@ -71,6 +48,12 @@ namespace TextAdventure
 
         }
 
+        /// <summary>
+        /// Deserializes data at the specified path into GameData class instance
+        /// <param name="filePath">Specified path for the .json file</param>
+        /// <param name="game">out arguement that will contain the desrielized object if successful</param>
+        /// <param name="e">arguement will contain an exception if unsuccessful, otherwise null</param>
+        /// <returns>true if object is read and deserialized successfuly, otherwise false</returns>
         public static bool LoadFromFile(string filePath, out GameData game, out Exception? e)
         {
             JsonSerializerSettings settings = new JsonSerializerSettings()

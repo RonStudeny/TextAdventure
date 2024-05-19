@@ -7,6 +7,10 @@ using TextAdventure.Text;
 
 namespace TextAdventure.DataStructure
 {
+    /// <summary>
+    /// This class provides the "content" of the game, where predfined items, enemies, locations and etc. are created.
+    /// When a new instance is required, it is not passed by reference, rather it is sent to the constructor of the given class and a new identical instance is created.
+    /// </summary>
     public static class Templates
     {
 
@@ -180,7 +184,10 @@ namespace TextAdventure.DataStructure
 
         public static Location[] locations = { Forest, City, Base };
     }
-
+    
+    /// <summary>
+    /// A class that holds all the neceseary data about the game, this object is (de)serialized when reading or writing a file
+    /// </summary>
     public class GameData
     {
         public Player player;
@@ -188,6 +195,10 @@ namespace TextAdventure.DataStructure
         public GameData game;
     }
 
+
+    /// <summary>
+    /// Player class holding all the neceseary values, being his health and a list of items representing his inventory
+    /// </summary>
     public class Player
     {
 
@@ -200,6 +211,10 @@ namespace TextAdventure.DataStructure
         public List<Item> Items { get; set; }
 
     }
+
+    /// <summary>
+    /// Item class from which all the other item classes are derived, inventory is kept in Item type list for scalebality and ease of access
+    /// </summary>
     public class Item
     {
         public Item() { }
@@ -261,7 +276,9 @@ namespace TextAdventure.DataStructure
             return $"{Name}";
         }
     }
-
+    /// <summary>
+    /// Simply for holding all the temporary values of an enemy for the duration of the fight
+    /// </summary>
     public class Enemy
     {
         public Enemy() { }
@@ -275,7 +292,9 @@ namespace TextAdventure.DataStructure
         public float Health { get; set; }
         public int Damage { get; set; }
     }
-
+    /// <summary>
+    /// Contains all the information about the location the player is currently in, most importantly the different items and enemies he can find in the location
+    /// </summary>
     public class Location
     {
         public Location() { }
