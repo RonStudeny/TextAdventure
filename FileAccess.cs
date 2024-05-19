@@ -76,13 +76,17 @@ namespace TextAdventure
 
     }
 
+    /// <summary>
+    /// Provides static methods that are used often through out the code, 
+    /// </summary>
+
     public static class Helpers
     {
         /// <summary>
-        /// Generic function for creating basic conversation loops, prints a message and options with which to respond
+        /// Function that provides a conversation loop with the player in the form of giving a prompt and several numbered options and expecting a number as a response 
         /// </summary>
-        /// <param name="message">The message that begins the conversation</param>
-        /// <param name="options">An array of options, that will be given to the user to choose from</param>
+        /// <param name="message">The message that player is prompted to respond to</param>
+        /// <param name="options">List of options for the player to choose from</param>
         /// <param name="res">A number coresponding to the chosen option, starting from 0</param>
         public static void Conversation(string message, List<string> options, out int res, bool backOption, string backText = "Back")
         {
@@ -113,7 +117,10 @@ namespace TextAdventure
             }
         }
 
-
+        /// <summary>
+        /// Chooses a random location from a list of available, premade locations
+        /// </summary>
+        /// <returns></returns>
         public static Location GetNewLocation()
         {
             //throw new Exception("This function is obsolete, please use Templates class for location, enemy and item instances");
@@ -122,6 +129,12 @@ namespace TextAdventure
 
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="itemType"></typeparam>
+        /// <param name="items"></param>
+        /// <returns></returns>
         public static List<itemType> GetItemsOfType<itemType>(List<Item> items) where itemType : Item
         {
             List<itemType> pickedItems = new List<itemType>();

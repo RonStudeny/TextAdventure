@@ -30,22 +30,23 @@ namespace TextAdventure
                 {2, () => Help()},
                 {3, () => Exit()},
             };
-            Helpers.Conversation(TextSource.mmWelocome, TextSource.mmOptions.ToList<string>(), out int res, false);
-            responseDict[res].Invoke();
 
-            //AssesResponse(res, NewGame, LoadGame, Help, Exit);
-            MainMenu();
+            Helpers.Conversation(TextSource.mmWelocome, TextSource.mmOptions.ToList<string>(), out int res, false);
+            responseDict[res].Invoke(); // call the correct func. based on the conversation outcome
+            MainMenu(); // recursively call MainMenu if player cancels any of the actions
         }
 
         // sets up a new game without creating or overriding any existing files
         public static void NewGame()
         {
             Helpers.Conversation(TextSource.newGameText, TextSource.newGameOptions.ToList<string>(), out int res, true);
-            if (res == 0)
+            if (res == 0) // player decides to proceed
             {
+                // setup a new game
                 Game.currentGame.player = new Player();
                 Game.currentGame.location = Helpers.GetNewLocation();
                 Game.currentGame.nextLocation = Helpers.GetNewLocation();
+                // start the main game loop
                 GameLoop();
             }
             
@@ -57,12 +58,12 @@ namespace TextAdventure
             Console.Clear();
             Console.WriteLine(TextSource.saveGameText);
 
-            string fileName = Console.ReadLine().ToLower();
-            if (fileName != null && fileName != "cancel")
+            string fileName = Console.ReadLine().ToLower(); // get the file name from the player
+            if (fileName != null && fileName != "cancel") // if the entered file name isn't empty or 'cancel' try to save it
             {
-                if (FileAccess.SaveGameToFile(fileName, Game.currentGame, out Exception? e))
-                    Console.WriteLine($"{TextSource.saveGameSuccess} as '{fileName}'");
-                else Console.WriteLine($"{TextSource.saveGameFailure} reason: {e.Message}..");
+                if (FileAccess.SaveGameToFile(fileName, Game.currentGame, out Exception? e)) // try to save the file using a custom function
+                    Console.WriteLine($"{TextSource.saveGameSuccess} as '{fileName}'"); // if successful, notify the player
+                else Console.WriteLine($"{TextSource.saveGameFailure} reason: {e.Message}.."); // else print out the reason
             }
             else Console.WriteLine(TextSource.saveGameCancel);
             Console.ReadLine();
@@ -71,17 +72,17 @@ namespace TextAdventure
         // loads .json file names from a specified dictionary and let's the player choose which game file to load
         public static void LoadGame()
         {
-            List<string> files = Helpers.GetFilePaths();
-            List<string> fileNames = Helpers.GetFileNames(files);
-            Helpers.Conversation(TextSource.loadGameText, fileNames, out int res, true);
+            List<string> files = Helpers.GetFilePaths(); // get paths to all the save files
+            List<string> fileNames = Helpers.GetFileNames(files); // get names of the files
+            Helpers.Conversation(TextSource.loadGameText, fileNames, out int res, true); // player selects the desired save file
             if (res >= 0)
             {
-                if (FileAccess.LoadFromFile(files[res], out Game.currentGame, out Exception? e))
+                if (FileAccess.LoadFromFile(files[res], out Game.currentGame, out Exception? e)) // try to load the selected file
                 {
-                    Console.WriteLine(TextSource.loadGameText);
-                    GameLoop();
+                    Console.WriteLine(TextSource.loadGameText); // loading text
+                    GameLoop(); // start the main game loop with the retrieved data
                 }
-                else Console.WriteLine($"{TextSource.loadGameFailed} reason: {e.Message}..");
+                else Console.WriteLine($"{TextSource.loadGameFailed} reason: {e.Message}.."); // if unsuccessful, notify the player with error message
                 Console.ReadLine();
             }
             
@@ -95,16 +96,16 @@ namespace TextAdventure
         // exit function, parameter is used to ask the player to confirm that they want to quit the game
         public static void Exit(bool showWarning = false) // exits the game
         {
-            if (showWarning)
+            if (showWarning) // check if the player should be asked to confirm 
             {
                Helpers.Conversation(TextSource.exitText, TextSource.exitOptions.ToList<string>(), out int res, false);
-               if (res == 0)
+               if (res == 0) // if confirem, exit the game
                 {
                     Console.WriteLine("Game exited...");
                     Environment.Exit(0);
                 }
             }
-            else
+            else // or just exit the game
             {
                 Console.WriteLine("Game exited...");
                 Environment.Exit(0);
