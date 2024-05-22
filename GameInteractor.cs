@@ -72,7 +72,7 @@ namespace TextAdventure
         // loads .json file names from a specified dictionary and let's the player choose which game file to load
         public static void LoadGame()
         {
-            List<string> files = Helpers.GetFilePaths(); // get paths to all the save files
+            List<string> files = Directory.GetFiles(Path.Combine(TextSource.saveFileDir)).ToList<string>(); // get paths to all the save files
             List<string> fileNames = Helpers.GetFileNames(files); // get names of the files
             Helpers.Conversation(TextSource.loadGameText, fileNames, out int res, true); // player selects the desired save file
             if (res >= 0)
@@ -128,7 +128,6 @@ namespace TextAdventure
 
             Helpers.Conversation($"{TextSource.mainLoopText} {Game.currentGame.location.Name}", TextSource.mainLoopOptions.ToList<string>(), out int res, false);
             responseDict[res].Invoke();
-            //AssesResponse(res, ChangeLocation, SearchLocation, ShowInventory);
             GameLoop();
 
         }
@@ -167,11 +166,9 @@ namespace TextAdventure
         public static void GrantItem()
         {
             Random rng = new Random();
-            //Console.WriteLine("Found ITEM!");
-            // Type type = .GetType();
-            int itemNum = rng.Next(0, Game.currentGame.location.ItemPool.Length);
+            int itemNum = rng.Next(0, Game.currentGame.location.ItemPool.Length); // choose random item out of the location's item pool
             Item foundItem = Game.currentGame.location.ItemPool[itemNum];
-            switch (foundItem)
+            switch (foundItem) // create new instance and cast the item to the correct type
             {
                 case Weapon:
                     foundItem = new Weapon((Weapon)Game.currentGame.location.ItemPool[itemNum]);
@@ -184,7 +181,7 @@ namespace TextAdventure
                     break;
             }
             
-
+            // keep or discard prompt
             Helpers.Conversation(TextSource.itemFoundText + " " + foundItem.Name + "\n" + foundItem.Description, TextSource.itemFoundOptions.ToList<string>(), out int res, false);
             if (res == 0)
                 Game.currentGame.player.Items.Add(foundItem);
@@ -292,17 +289,17 @@ namespace TextAdventure
         public static void ShowInventory()
         {
             Console.Clear();
-            Console.WriteLine("Weapons:");
+            Console.WriteLine("Weapons:"); // Weapon type items
             foreach (var item in Helpers.GetItemsOfType<Weapon>(Game.currentGame.player.Items))
                 Console.WriteLine(item.ToString());
             Console.WriteLine();
 
-            Console.WriteLine("Consumables:");
+            Console.WriteLine("Consumables:"); // Consumable type items
             foreach (var item in Helpers.GetItemsOfType<Consumable>(Game.currentGame.player.Items))
                 Console.WriteLine(item.ToString());
             Console.WriteLine();
 
-            Console.WriteLine("Crafting items:");
+            Console.WriteLine("Crafting items:"); // Craftin type items
             foreach (var item in Helpers.GetItemsOfType<CraftItem>(Game.currentGame.player.Items))
                 Console.WriteLine(item.ToString());
             Console.WriteLine();

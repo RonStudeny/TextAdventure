@@ -87,29 +87,31 @@ namespace TextAdventure
         /// </summary>
         /// <param name="message">The message that player is prompted to respond to</param>
         /// <param name="options">List of options for the player to choose from</param>
-        /// <param name="res">A number coresponding to the chosen option, starting from 0</param>
+        /// <param name="res">A number coresponding to the chosen option, starting from 0, if "back" was selected, returns -1</param>
+        /// <param name="backOption">bool indicating if a "back" option should be added</param>
+        /// <param name="backText">Optional parameter overriding the displayed name of the "back" option, is set to "Back" as default</param>
         public static void Conversation(string message, List<string> options, out int res, bool backOption, string backText = "Back")
         {
             bool loop = true;
             res = -1;
-            if (backOption)
+            if (backOption) // if desired, add cancel or back as an option
                 options.Add(backText);
             
             while (loop)
             {
                 Console.Clear();
-                Console.WriteLine(message + "\n");
-                for (int i = 0; i < options.Count; i++)
+                Console.WriteLine(message + "\n"); // prompt message
+                for (int i = 0; i < options.Count; i++) // print out options numbered 1-n
                     Console.WriteLine($"{i + 1}. {options[i]}");
 
                 if (int.TryParse(Console.ReadLine(), out res) && res > 0 && res < options.Count + 1)
                 {
-                    if (backOption)
+                    if (backOption) // if back was selected, res will be -1, otherwise return selected option (index is 1 lower than the selected option's number)
                         res = res == options.Count ? -1 : --res;
                     else --res;
                     loop = false;
                 }
-                else
+                else // catch invalid input
                 {
                     Console.WriteLine("Invalid input, type a corresponding number...");
                     Console.ReadLine();
@@ -123,47 +125,51 @@ namespace TextAdventure
         /// <returns></returns>
         public static Location GetNewLocation()
         {
-            //throw new Exception("This function is obsolete, please use Templates class for location, enemy and item instances");
             Random rng = new Random();
             return new Location(Templates.locations[rng.Next(0, Templates.locations.Length)]);
 
         }
 
+
         /// <summary>
-        /// 
+        /// A generic function that returns List of desired item types out of a Item List (typically player's inventory) 
         /// </summary>
-        /// <typeparam name="itemType"></typeparam>
-        /// <param name="items"></param>
-        /// <returns></returns>
+        /// <typeparam name="itemType">Desired type of the items</typeparam>
+        /// <param name="items">Input list of items, the desired itemType instances will be selected from this list</param>
+        /// <returns>List of the desired itemType containing references to all the items of this type in the original List parameter</returns>
         public static List<itemType> GetItemsOfType<itemType>(List<Item> items) where itemType : Item
         {
             List<itemType> pickedItems = new List<itemType>();
             foreach (var item in items)
             {
-                if (item is itemType itemOfType)
+                if (item is itemType itemOfType) // add corresponding items to the resulting list
                     pickedItems.Add(itemOfType);
             }
             return pickedItems;
         }
-
+        /// <summary>
+        /// Generic function that gets all the .ToString() results of given items
+        /// </summary>
+        /// <typeparam name="itemType">desired item type, is implicit</typeparam>
+        /// <param name="items">List of items from which the Name property will be gathered</param>
+        /// <returns>List of strings containing the converted items, used for displaying inventory or using the given items</returns>
         public static List<string> GetNames<itemType>(List<itemType> items) where itemType : Item
         {
             List<string> res = new List<string>();
-            for (int i = 0; i < items.Count; i++)
-                res.Add(items[i].ToString());
+            for (int i = 0; i < items.Count; i++) // cycle through the list
+                res.Add(items[i].ToString()); // call .ToString() functions and save the result
             return res;
         }
-
-        public static List<string> GetFilePaths()
-        {
-            return Directory.GetFiles(Path.Combine(TextSource.saveFileDir)).ToList<string>();
-        }
-
+        /// <summary>
+        /// Gets save file names from the provided paths, used for displaying to the player
+        /// </summary>
+        /// <param name="paths">List of paths to the desired save files<param>
+        /// <returns>List of save file names at the end of the provided paths</returns>
         public static List<string> GetFileNames(List<string> paths)
         {
             List<string> res =  new List<string>();
-            foreach (var filePath in paths)
-                res.Add(Path.GetFileName(filePath));
+            foreach (var filePath in paths) // cycle through paths
+                res.Add(Path.GetFileName(filePath.Split('.')[0])); // remove suffix and save result
             return res;
         }
 
