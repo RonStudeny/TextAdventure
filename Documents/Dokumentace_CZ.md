@@ -1,4 +1,4 @@
-# **Dokumentace Text Adventure**
+# **Dokumentace hry Text Adventure**
 ### Verze:
 1.0
 ### Obor:
@@ -28,6 +28,33 @@ zvole prosím možnost:<br>
 2. Načti hru<br>
 3. Ukončit hru<br>
 
-# 2 
+# 2 Struktura progamu
+## 2.1 Funkční specifikace
+### 2.1.1 Třída Game
+Třída obsahující entrypoint programu a udržuje data potřebná k běhu hry<br><br>
+``public static GameData currentGame`` pole obsahující veškerá data se kterými se pracuje během **načítání**, **ukládání** a **průběhu** hry<br>
+``Main()`` Entry point programu, pouze spouští další statickou metodu, která zajišťuje spuštění hlavního menu.
+### 2.1.2 Třída GameInteractor
+*popis*<br><br>
+``private static Dictionary<int, Action> _responseDict`` pole určeno k časté redefinici, používá se k spuštění korespondující metody na základě celočíselného klíče (z pravidla vstup uživatele)
+#### 2.1.2.1 Interakce s menu
+``MainMenu()``<br>
+``NewGame()``<br>
+``SaveGame()``<br>
+``LoadGame()``<br>
+``Help()``<br>
+``Exit()``<br>
+#### 2.1.2.2 Interakce se hrou
+``GameLoop()``<br>
+``ChangeLocation()``<br>
+``SearchLocation()``<br>
+``GrantItem()``<br>
+``Fight()``<br>
+``ShowInventory()``<br>
+``GameOver()``<br>
+
+## 2.3 Datové struktury
+## 2.2 Průběh
+## 2.4 Závislosti
 
 
