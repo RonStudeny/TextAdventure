@@ -52,7 +52,16 @@ Třída obsahující entrypoint programu a udržuje data potřebná k běhu hry<
 ``Fight()``<br>
 ``ShowInventory()``<br>
 ``GameOver()``<br>
-
+### 2.1.3 Třída FIleAccess
+*popis*<br>
+``SaveGameToFile()``
+``LoadFromFIle()``
+### 2.1.4 Třída Helpers
+``Conversation()``
+``GetNewLocation()``
+``GetItemsOfType()``
+``GetNames()``
+``GetFileNames()``
 ## 2.3 Datové struktury
 ## 2.2 Průběh
 ## 2.4 Závislosti
