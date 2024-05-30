@@ -18,8 +18,7 @@ namespace TextAdventure.Text
         public static string newGameText = "You are about to start a new game, are you sure?";
         public static string[] newGameOptions = { "Yes" };
 
-        public static string helpText = "*very useful info*";
-        public static string[] helpOptions = { "help1", "help2" };
+        public static string helpText = "Welcome to Text adventure, help is currently not implemented, may god help you...";
 
         public static string loadGameText = "Please select a save file:";
         public static string loadGameLoading = "Loading the game...";
@@ -54,6 +53,9 @@ namespace TextAdventure.Text
 
         public static string exitText = "Any unsaved progress will be lost, are you sure?";
         public static string[] exitOptions = { "YES - exit", "NO - cancel" };
+
+        public static string gameOverText = "You died... ";
+        public static string[] gameOverOptions = { "Load a save", "Quit"};
 
 
     }

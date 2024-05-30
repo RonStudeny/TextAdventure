@@ -12,18 +12,18 @@ namespace TextAdventure
 {
     /// <summary>
     /// The point of this class is to provide functions that interact between the player and the game, while being easy to use and re-use from the developers perspective
-    /// </summary>
+    /// </summary>    
     public class GameInteractor
     {
         // Dictionary used for handling player response, takes an int as a key and runs the desired function, corresponding to the player's choice
-        public static Dictionary<int, Action> responseDict;
+        private static Dictionary<int, Action> _responseDict;
 
         #region Menu functions
         
         // First function ran from the entry point, provides a couple of main menu options
         public static void MainMenu()
         {
-            responseDict = new Dictionary<int, Action>
+            _responseDict = new Dictionary<int, Action>
             {
                 {0, () => NewGame()},
                 {1, () => LoadGame()},
@@ -32,7 +32,7 @@ namespace TextAdventure
             };
 
             Helpers.Conversation(TextSource.mmWelocome, TextSource.mmOptions.ToList<string>(), out int res, false);
-            responseDict[res].Invoke(); // call the correct func. based on the conversation outcome
+            _responseDict[res].Invoke(); // call the correct func. based on the conversation outcome
             MainMenu(); // recursively call MainMenu if player cancels any of the actions
         }
 
@@ -90,7 +90,7 @@ namespace TextAdventure
         // simple game rule overview
         public static void Help()
         {
-            Helpers.Conversation(TextSource.helpText, TextSource.helpOptions.ToList<string>(), out int res, true);
+            Helpers.Conversation(TextSource.helpText, new List<string>(), out int res, true);
         }
 
         // exit function, parameter is used to ask the player to confirm that they want to quit the game
@@ -117,7 +117,7 @@ namespace TextAdventure
         // Main "cycle" in which player chooses actions and the game responds, the loop is done recursivly as to avoid unneceseary conditions and loops 
         public static void GameLoop()
         {
-            responseDict = new Dictionary<int, Action>
+            _responseDict = new Dictionary<int, Action>
             {
                 {0, () => ChangeLocation()},
                 {1, () => SearchLocation(Game.currentGame.location.SearchChances)},
@@ -127,7 +127,7 @@ namespace TextAdventure
             };
 
             Helpers.Conversation($"{TextSource.mainLoopText} {Game.currentGame.location.Name}", TextSource.mainLoopOptions.ToList<string>(), out int res, false);
-            responseDict[res].Invoke();
+            _responseDict[res].Invoke();
             GameLoop();
 
         }
@@ -247,7 +247,7 @@ namespace TextAdventure
                             Console.ReadLine();
                             break;
                         case 2: // RUN
-                            if (rng.Next(0, 3) == 0) // successful escape 
+                            if (rng.Next(0, 4) == 0) // successful escape 
                             {
                                 escape = true;
                                 playerTurn = false;
@@ -275,14 +275,12 @@ namespace TextAdventure
                     }
                         
                     else // player death
-                    {
                         Game.currentGame.player.Health = 0;
-                        GameOver();
-                    }
+                        
                     Console.ReadLine();
                 }
-            } while (!escape && enemy.Health > 0); // loop while player is alive, hasn't escaped and the enemy is alive
-
+            } while (!escape && enemy.Health > 0 && Game.currentGame.player.Health > 0); // loop while player is alive, hasn't escaped and the enemy is alive
+            if (Game.currentGame.player.Health <= 0) GameOver();
         }
 
         // Prints out the player's whole inventory divided by different item types
@@ -306,19 +304,18 @@ namespace TextAdventure
             Console.ReadLine();
         }
 
-        // this function is called if the player looses a fight (his Health reaches 0)
+        // this function is called if the player looses a fight (his Health reaches 0 or lower)
         public static void GameOver()
         {
-            Console.WriteLine("Bruh you died...");
-            Console.ReadLine();
-            Exit();
+            bool loop = true;
+            do // loop incase a corrupted file is loaded
+            {
+                Helpers.Conversation(TextSource.gameOverText, TextSource.gameOverOptions.ToList(), out int res, false);
+                if (res == 0) LoadGame();
+                else Exit();
+            } while (loop);
+
+
         }
-
-
-
-
-
-
-
     }
 }
