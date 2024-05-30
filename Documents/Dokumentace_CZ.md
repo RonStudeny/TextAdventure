@@ -49,11 +49,11 @@ Funkce potřebné k implementování základních funkcionalit různých menu<br
 Funkce implementující hlavní chod a funkcionality hry<br><br>
 ``GameLoop()`` Hlavní "cyklus" hry, dává hráči na výběr z několika možností: **Změnit lokaci, prohledat lokaci, zobrazit inventář a odejít ze hry** <br>
 ``ChangeLocation()`` Změní lokaci hráče tím, že Modifikuje aktivní instanci hry, přesněji informace o aktuální hračově lokalitě a lokalitě, na kterou se může dál přesunout. Informace o aktuální lokalitě přepíše informacemi o té další a vygeneruje data pro další lokaci, kterými přepíše ta původní <br>
-``SearchLocation()``<br>
-``GrantItem()``<br>
-``Fight()``<br>
-``ShowInventory()``<br>
-``GameOver()``<br>
+``SearchLocation(int chances)`` Hráč "prohledá" lokaci, výsledkem čehoč může být nalezení nějakého předmětu (funkce ``GrantItem()``) nebo utkání s nepřítelem (funkce ``Fight()``). Parametr ``chances`` slouží k stanovení, jak velkou šanci má hráč na nalezení předmětu/nepřítele (pokud ``chances`` = 1 - 100% nepřítel, 2 - 50%, 4 - 25%...) <br>
+``GrantItem()`` Vybere náhodný předmět, ze seznamu předmětů které se v dané lokaci mohou vyskytovat a hráč si vybere zda ho zahodit či přidat do inventáře<br>
+``Fight()`` Vybere náhodného nepřítele ze seznamu nepřátel, kteří se mohoou v dané lokaci vyksytovat, hráč je dále "zamknut" v módu boje, kde má tři možnosti: **Bojovat, použít předmět nebo utéct**, boj končí v případě že hráč nepřítele porazí, hráč zemře, nebo úspěšně uteče<br>
+``ShowInventory()`` Vypíše obsah hráčova invenáře, rozdělený na skupiny podle využití předmětů (zbraň, konzumovatelný předmět, suroviny)<br>
+``GameOver()`` Funkce která se spustí pokud hráč zemře v boji, umožní odejít ze hry či načíst uloženou hru zavoláním ``LoadGame()`` funkce<br>
 ### 2.1.3 Třída FileAccess
 *popis*<br><br>
 ``SaveGameToFile()``<br>
