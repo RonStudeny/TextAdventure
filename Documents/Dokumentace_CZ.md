@@ -36,34 +36,57 @@ Třída obsahující entrypoint programu a udržuje data potřebná k běhu hry<
 ``Main()`` Entry point programu, pouze spouští další statickou metodu, která zajišťuje spuštění hlavního menu.
 ### 2.1.2 Třída GameInteractor
 *popis*<br><br>
-``private static Dictionary<int, Action> _responseDict`` pole určeno k časté redefinici, používá se k spuštění korespondující metody na základě celočíselného klíče (z pravidla vstup uživatele)
+``private static Dictionary<int, Action> _responseDict`` pole typu Dictionary, určeno k časté redefinici, používá se k spuštění korespondující metody na základě celočíselného klíče (z pravidla vstup uživatele)
 #### 2.1.2.1 Interakce s menu
-``MainMenu()``<br>
-``NewGame()``<br>
-``SaveGame()``<br>
-``LoadGame()``<br>
-``Help()``<br>
-``Exit()``<br>
+Funkce potřebné k implementování základních funkcionalit různých menu<br><br>
+``MainMenu()`` Funkce spuštěna z entry poinutu, dá hráči na výběr několik základních možnistí hlavního menu: **Začít novou hru, načíst existující hru, otevřít pomocné menu a odejít ze hry**<br>
+``NewGame()`` Zařídí vše potřebné ke spuštění nové hry, aniž by vytvořila nebo přepsala jakékoliv existující soubory s uloženými daty<br>
+``SaveGame()`` Provede hráče procesem vytváření nového .json souboru ve kterém budou uložena veškerá data momentálně rozehrané hry <br>
+``LoadGame()`` Zobrazí veškeré souobory typu .json uložené ve složce určené pro ukládání her, umožní hráči zvolit soubor, který chce načíst a odchytne veškeré chyby, které by mohly způsobit selhání programu, například v případě neúplných či chybných dat <br>
+``Help()`` zatím neimplementováno<br>
+``Exit(bool showWarning = false)`` Funkce sloužící k ukončení programu/hry, nepovinný parametr ``showWarning`` slouží k určení, zda by se po hráči mělo vyžadovat potvrzení (např. pokud by ukončoval hru před uložením) <br>
 #### 2.1.2.2 Interakce se hrou
-``GameLoop()``<br>
-``ChangeLocation()``<br>
+Funkce implementující hlavní chod a funkcionality hry<br><br>
+``GameLoop()`` Hlavní "cyklus" hry, dává hráči na výběr z několika možností: **Změnit lokaci, prohledat lokaci, zobrazit inventář a odejít ze hry** <br>
+``ChangeLocation()`` Změní lokaci hráče tím, že Modifikuje aktivní instanci hry, přesněji informace o aktuální hračově lokalitě a lokalitě, na kterou se může dál přesunout. Informace o aktuální lokalitě přepíše informacemi o té další a vygeneruje data pro další lokaci, kterými přepíše ta původní <br>
 ``SearchLocation()``<br>
 ``GrantItem()``<br>
 ``Fight()``<br>
 ``ShowInventory()``<br>
 ``GameOver()``<br>
-### 2.1.3 Třída FIleAccess
-*popis*<br>
-``SaveGameToFile()``
-``LoadFromFIle()``
+### 2.1.3 Třída FileAccess
+*popis*<br><br>
+``SaveGameToFile()``<br>
+``LoadFromFIle()``<br>
 ### 2.1.4 Třída Helpers
-``Conversation()``
-``GetNewLocation()``
-``GetItemsOfType()``
-``GetNames()``
-``GetFileNames()``
+*popis*<br><br>
+``Conversation()``<br>
+``GetNewLocation()``<br>
+``GetItemsOfType()``<br>
+``GetNames()``<br>
+``GetFileNames()``<br>
+### 2.1.5 Třída Templates
+*popis*<br><br>
 ## 2.3 Datové struktury
-## 2.2 Průběh
+popis<br><br>
+### 2.3.1 Třída GameData
+**popis**<br><br>
+### 2.3.2 Třída Player
+**popis**<br><br>
+### 2.3.3 Třída Item
+**popis**<br><br>
+#### 2.3.3.1 Třída Weapon : Item
+**popis**<br><br>
+#### 2.3.3.2 Třída Weapon : Item
+**popis**<br><br>
+#### 2.3.3.3 Třída Weapon : Item
+**popis**<br><br>
+### 2.3.4 Třída Enemy
+**popis**<br><br>
+### 2.3.5 Třída Location
+**popis**<br><br>
+## 2.3 Popis průběhu programu
 ## 2.4 Závislosti
+# 3 Závěr
 
 
