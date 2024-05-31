@@ -10,6 +10,41 @@ Ron Studený
 ### Kontakt:
 XSTUR008@studenti.czu.cz
 
+# Obsah
+* 1 [Základní informace](#1-základní-informace)
+  * 1.1 [Cíl a koloběh hry](#11-cíl-a-koloběh-hry)
+  * 1.2 [Rozsah](#12-rozsah)
+  * 1.3 [Ovládání](#13-ovládání)
+* 2 [Struktura progamu](#2-struktura-progamu)
+  * 2.1 [Funkční specifikace](#21-funkční-specifikace)
+    * 2.1.1 [Třída Game](#211-třída-game)
+    * 2.1.2 [Třída GameInteractor](#212-třída-gameinteractor)
+      * 2.1.2.1 [Interakce s menu](#2121-interakce-s-menu)
+      * 2.1.2.2 [Interakce se hrou](#2122-interakce-se-hrou)
+    * 2.1.3 [Třída FileAccess](#213-třída-fileaccess)
+    * 2.1.4 [Třída Helpers](#214-třída-helpers)
+  * 2.3 [Datové struktury](#23-datové-struktury)
+    * 2.3.1 [Třída GameData](#231-třída-gamedata)
+    * 2.3.2 [Třída Player](#232-třída-player)
+    * 2.3.3 [Třída Item](#233-třída-item)
+      * 2.3.3.1 [Třída Weapon : Item](#2331-třída-weapon--item)
+      * 2.3.3.2 [Třída Consumable : Item](#2332-třída-consumable--item)
+      * 2.3.3.3 [Třída CraftItem : Item](#2333-třída-craftitem--item)
+    * 2.3.4 [Třída Enemy](#234-třída-enemy)
+    * 2.3.5 [Třída Location](#235-třída-location)
+    * 2.3.6 [Třída Templates](#236-třída-templates)
+    * 2.3.7 [Třída TextSource](#237-třída-textsource)
+  * 2.4 [Koncepční průběh programu](#24-koncepční-průběh-programu)
+    * 2.4.1 [Hlavní menu](#241-hlavní-menu)
+    * 2.4.2 [Hra](#242-hra)
+    * 2.4.3 [Boj](#243-boj)
+  * 2.5 [Závislosti](#25-závislosti)
+    * 2.5.1 [Newtonsoft.Json](#251-newtonsoftjson)
+  * 2.6 [Nedostatky a možná zlepšení](#26-nedostatky-a-mozná-zlepšení)
+    * 2.6.1 [Práce s herními daty a textem](#261-práce-s-herními-daty-a-textem)
+    * 2.6.2 [Obsah hry](#262-obsah-hry)
+    * 2.6.3 [Vstupní omezení](#263-vstupní-omezení)
+
 # 1 Základní informace
 ## 1.1 Cíl a koloběh hry
 Jedná se o textovou hru ve které hráč činí rozhodnutí na základě situací ve kterých se vyskytuje. Hráč se vždycky vyskytuje v jakési lokaci, která mu je popsána a má na výběr z několika možností.<br>
@@ -66,28 +101,73 @@ Třída implementuje statické funkce které se opakovaně využívají na různ
 ``GetNames<itemType>(List<itemType> items)`` Vrací seznam typu ``string``, z listu ``items`` zavolá u každé položky ``.ToString()`` metodu a přidá výsledek do výsledného seznamu<br><br>
 ``GetFileNames(List<string> paths)``Získá jméma souborů z konce cest poskytnutých ``paths`` parametrem a vrátí je formou seznamu<br>
 ## 2.3 Datové struktury
-popis<br><br>
+Třídy a objekty, které reprezentují jednotlivé součásti hry, jejich rozdělení, dědičnost a význam...
 ### 2.3.1 Třída GameData
-**popis**<br><br>
+Obsahuje veškeré informace potřebné k chodu hry, instance této třídy se používá jakožto aktivní zdroj dat, které se za chodu hry modifikují a dále používají. Zároveň je to instance této třídy která se serializuje a deserializuje při ukládání/načítání hry<br><br>
+``public Player player`` Souhrn aktuálních dat o hráči<br><br>
+``public Location location`` Souhrn dat o aktuální lokaci hráče<br><br>
+``public Location nextLocation`` Souhrn dat o další přístupné lokaci<br><br>
+``public GameData game`` 
 ### 2.3.2 Třída Player
-**popis**<br><br>
+Třída reprezentující hráče a jeho vlastnostibr><br>
+``public int Health`` Celé číslo reprezentující hráčovo zdraví<br><br>
+``public List<Item> Items`` Seznam instnací typu ``Item`` reprezentující hráčův inventář <br><br>
 ### 2.3.3 Třída Item
-**popis**<br><br>
+Základní třída ze které dědí následující třídy, obsahuje vlastnoti společné pro všehcny objektu typu ``Item``<br>
+Všechny třídy dědící z této třídy implementují přetížený konstruktor určený k vytvoření identické instacne poskytnuté třídy, což slouží k ukládání více předmětů stejného typu.
+``override string ToString()`` přetížení ``.ToString()`` metody za účelem jednoduchého vypsání jednotlivých položek, například v případě inventáře, je taktéž implementována u všech tříd dědících z této třídy.<br><br>
+``public string Name`` Jméno předmětu<br><br>
+``public string Description`` Popis předmětu zobrazen při jeho nalezení<br><br>
 #### 2.3.3.1 Třída Weapon : Item
-**popis**<br><br>
-#### 2.3.3.2 Třída Weapon : Item
-**popis**<br><br>
-#### 2.3.3.3 Třída Weapon : Item
-**popis**<br><br>
+Druh předmětu používaný jako zbraň, má vymezený počet použití, a určité poškození, které může udělit nepříteli<br><br>
+``public int Damage`` Celočíselná hodonota reprezentující poškození udělené nepříteli při použití tohoto předmětu<br><br>
+``public int Uses`` Hodnota reprezentující počet, kolikrát se předmět dá použít než se "rozbije" <br><br>
+#### 2.3.3.2 Třída Consumable : Item
+Předmět sloužící k doplnění hráčova zdraví<br><br>
+``public int HealthRestore`` Množství zdraví, které bude hráči doplněno po použítí předěmetu, není možné přesáhnout hodnotu zdraví 100<br><br>
+``public int Uses`` Hodnota reprezentující počet, kolikrát se předmět dá použít než se "vypotřebuje" <br><br>
+#### 2.3.3.3 Třída CraftItem : Item
+Předměty tohoto typu lze ve hře nalézt ale aktuálně nemají žádný účel, jelikož vyrábění **(crafting)** nebylo implementováno<br><br>
 ### 2.3.4 Třída Enemy
-**popis**<br><br>
+Všechna data relevantní k nepříteli, se kterým se hráč uktá<br>
+Obsahuje přetížený konstruktor určený k vytvoření nové instance podle "šablony"<br><br>
+``public string Name`` Jméno nepřítele, opakovaně se zobrazuje během boje<br><br>
+``public int Health`` Zdraví nepřítele, může být i hodnota větší než 100<br><br>
+``public int Damage`` Poškození, které nepřítel udělí hráči na konci jeho tahu v utkání<br><br>
 ### 2.3.5 Třída Location
+Definuje vlastnosti lokace, ve které se hráč může či aktuálně nachází.<br>
+Obsahuje přetížený konstruktor určený k vytvoření nové instance podle "šablony"<br><br>
+``public string Name`` Jméno lokace
+``public string Narrative`` Popis zobrazen při změně lokace, slouží k nastínění a popisu lokace
+``public int Searches`` Kolikrát může hráč ještě prohledat lokalitu.
+``public int SearchChances`` Jakou šanci má hráč najít nepřítele při prohledávání lokality (1 = 100% nepřítel, 2 = 50%, 4 = 25% ...)
+``public Item[] ItemPool`` Pole obsahující odkazy na instance předmětů, které je možné nalézt v dané lokaci
+``public Enemy[] EnemyPool`` Pole obsahující odkazy na instance nepřátel, kteří se mohou vyskytovat v dané lokaci
 ### 2.3.6 Třída Templates
-Třída poskytuje instance br><br>
-**popis**<br><br>
-## 2.3 Popis průběhu programu
-## 2.4 Závislosti
-## 2.5 Nedostatky a možná zlepšení
-# 3 Závěr
-
-
+Třída poskytuje specifické instance výše definovaných tříd, které tvoří celkový obsah hry, je definováno několik předmětů, nepřátel a lokalit, avšak jen v takovém množštví, aby hra byla testovatelná <br><br>
+``public Location[] locations`` Pole obsahující všechny momentálně implementované lokace
+### 2.3.7 Třída TextSource
+Třída obsahuje veškerý text, který je ve hře zobrazován. Je uložen prostřednictvím statických ``string`` proměnných a statických ``string`` polí, která zpravidla reprezentují hráčovi možnosti odpovědi na podnět
+## 2.4 Koncepční průběh programu
+### 2.4.1 Hlavní menu
+Po způštění je hráč uvítán hlavním menu, ve kterém si může vybrat z několika možností: **začít novou hru, načíst hru, menu s pomocným popisem, odejít ze hry**
+### 2.4.2 Hra
+Po vytvoření nové hry či načtení hry ze souboru je hráč přesunut do hlavního koloběhu hry, hráč má několik možností: **změna lokace, prohledání lokace, zobrazení inventáře, uložení hry a ukončení hry**
+### 2.4.3 Boj
+Pokud hráč během prohledání objeví nepřítele, je přesunut do módu "boje", který je založený na tazích, hráč si opět může vybírat z několika možností: **zaútočit, použít předmět, utéct**
+1. při **útoku** si hráč vybere jednu ze zbraní, kterou doposud našel či může své rozhodnutí zrušit, pokud se rozhodne zaútočit, hráčův tah končí a nepřítel zaútočí také, pokud své rozhodnutí zruší, tah hráči zůstává
+2. **použítí předmětu** hráč si může vybrat z doposud nalezených konzumovatelných předmětů, který mu doplní určité množství zdraví (ne víc, než maximum, tedy 100) tato akce neukončí hráčův tah
+3. **útěk** Je možné že hráč nemá žádnou či dostatečnou zbraň na obranu, tím pádem je jediná možnost útěk, který může a nemusí vyjít, pokud vyjde, hráč se vrátí zpět do hlavního herního cyklu, pokud ne, skončí hráčův tah a nepřítel zaútočí
+## 2.5 Závislosti
+### 2.5.1 Newtonsoft.Json
+Hra využívá tuto knihovnu k serializaci a deserializaci herních dat do .json formátu
+## 2.6 Nedostatky a možná zlepšení
+### 2.6.1 Práce s herními daty a textem
+První věcí co bych chtěl zlepšit je ten fakt že aktuálně je všechen text využíván ve hře uložen prostřednictvím statických ``string`` proměnných, což způsobuje poměřně velké využití operační paměti na poměrně malou aplikaci. To samé se vztahuje na obsah hry ve formě třídy ``Templates`` který je realizován statickými instancemi různých tříd. Řešení obou těchto případů by bylo uložení veškerých potřebných dat externě a načítat pouze potřebné části.
+### 2.6.2 Obsah hry
+Obsah hry je aktuálně velmi omezený:
+1. z pohledu lokalit, nepřátel, a předmětů které hráč může najít a prozkoumat
+2. z pohledu akcí, které hráč může provádět, hra měla původně být rozšířena ještě o postunpné prozkoumávání každé lokality (pod-lokality), dále mělo být soušástí hry vyrábění (crafting) a hlubší bojový systém (brnění, různé efekty od konzumovatelných předmětů i nepřátel apod.)
+3. Nekonečný mód. Původní smysl hry měl být v tom, že by byla neustále generována jakýmsi modelem generativní umělé inteligence, která by zastávala roli "vypravěče", tj. generovala by instance všech datových tříd (lokace, předměty, nepřátele...) na základě nějakého počátečního vstupu.
+### 2.6.3 Vstupní omezení
+Vstupy jsou z většiny ošetřeny a aktuálně mi není známý žádný vstup který by způsobil selhání programu, avšak při zadávání jména souboru pro uložení hry je možné psát různé koncovky, které by potenciálně mohly ovlivnit funkčnost tohoto souboru
