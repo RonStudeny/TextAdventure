@@ -192,7 +192,7 @@ namespace TextAdventure.DataStructure
     {
         public Player player;
         public Location location, nextLocation;
-        public GameData game;
+        //public GameData game;
     }
 
 
