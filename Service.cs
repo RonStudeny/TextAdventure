@@ -182,7 +182,7 @@ namespace TextAdventure
         {
             if (fileName == null) return false;
             for (int i = 0; i < fileName.Length; i++)
-                if (!Char.IsLetter((char)fileName[i])) return false;
+                if (!Char.IsLetter(fileName[i]) && fileName[i] != '_') return false;
             return true;
         }
 
