@@ -26,6 +26,7 @@ namespace TextAdventure.Text
 
         public static string saveGameText = "Type file name to save your progress\nTip: Type an existing file name to override the given file or type 'cancel' to cancel saving";
         public static string saveGameSuccess = "Game saved successfuly as";
+        public static string saveGameInvalidFileName = "You've eneterd an invalid file name, it must consist of letters only";
         public static string saveGameFailure = "Error while saving the game";
         public static string saveGameCancel = "Saving canceled...";
 

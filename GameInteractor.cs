@@ -59,12 +59,18 @@ namespace TextAdventure
             Console.WriteLine(TextSource.saveGameText);
 
             string fileName = Console.ReadLine().ToLower(); // get the file name from the player
-            if (fileName != null && fileName != "cancel") // if the entered file name isn't empty or 'cancel' try to save it
+            if (fileName != "cancel")
             {
-                if (FileAccess.SaveGameToFile(fileName, Game.currentGame, out Exception? e)) // try to save the file using a custom function
-                    Console.WriteLine($"{TextSource.saveGameSuccess} as '{fileName}'"); // if successful, notify the player
-                else Console.WriteLine($"{TextSource.saveGameFailure} reason: {e.Message}.."); // else print out the reason
+                if (Helpers.IsFileNameValid(fileName)) // if the entered file name is valid, try to save it
+                {
+                    if (FileAccess.SaveGameToFile(fileName, Game.currentGame, out Exception? e)) // try to save the file using a custom function
+                        Console.WriteLine($"{TextSource.saveGameSuccess} as '{fileName}'"); // if successful, notify the player
+                    else Console.WriteLine($"{TextSource.saveGameFailure} reason: {e.Message}.."); // else print out the reason
+                }
+                else // notify of invalid file name
+                    Console.WriteLine(TextSource.saveGameInvalidFileName);
             }
+
             else Console.WriteLine(TextSource.saveGameCancel);
             Console.ReadLine();
         }

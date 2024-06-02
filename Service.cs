@@ -173,6 +173,18 @@ namespace TextAdventure
             return res;
         }
 
+        /// <summary>
+        /// Verifies the validity of a given file name so it doesn't contain invalid characters
+        /// </summary>
+        /// <param name="fileName">File name to be checked</param>
+        /// <returns></returns>
+        public static bool IsFileNameValid(string fileName)
+        {
+            if (fileName == null) return false;
+            for (int i = 0; i < fileName.Length; i++)
+                if (!Char.IsLetter((char)fileName[i])) return false;
+            return true;
+        }
 
     }
 }
