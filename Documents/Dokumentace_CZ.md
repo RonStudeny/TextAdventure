@@ -100,6 +100,7 @@ Třída implementuje statické funkce které se opakovaně využívají na různ
 ``GetItemsOfType<itemType>(List<Item> items)`` Generická funkce která z listu ``items`` vybere a vrátí položky, které jsou daného typu dle dědičnosti, požadovaný typ je určen parametrem  ``<itemType>``<br><br>
 ``GetNames<itemType>(List<itemType> items)`` Vrací seznam typu ``string``, z listu ``items`` zavolá u každé položky ``.ToString()`` metodu a přidá výsledek do výsledného seznamu<br><br>
 ``GetFileNames(List<string> paths)``Získá jméma souborů z konce cest poskytnutých ``paths`` parametrem a vrátí je formou seznamu<br>
+``IsFileNameValid(string fileName)`` Ověří správnost formátu jména souboru přijatého argumentem ``fileName``
 ## 2.3 Datové struktury
 Třídy a objekty, které reprezentují jednotlivé součásti hry, jejich rozdělení, dědičnost a význam...
 ### 2.3.1 Třída GameData
